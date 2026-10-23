@@ -1,1 +1,0 @@
-aura-2-apollo-en::Layer One is the Zetaris Data Harness. Instead of brittle point-to-point ETL, Switchyard queries ERP purchase orders, warehouse inventory ledgers, quality incident tickets, and live carrier feeds through single-statement Zetaris Lightning SQL. Every query carries a fresh request UUID and maps conflicting records directly into a live provenance graph.

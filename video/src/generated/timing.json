@@ -1,49 +1,164 @@
 {
   "fps": 30,
-  "transitionFrames": 14,
-  "totalDurationInFrames": 4983,
-  "totalDurationSec": 166.1,
-  "voice": "aura-2-apollo-en",
+  "transitionFrames": 12,
+  "totalDurationInFrames": 4476,
+  "totalDurationSec": 149.2,
+  "voice": "aura-2-thalia-en",
   "scenes": {
     "open": {
       "id": "open",
-      "text": "In high-value manufacturing, enterprise systems constantly disagree. Your ERP says four thousand silicon-carbide power modules shipped on time. But warehouse dock scans show only three hundred fifty usable units, quality control quarantined eight hundred for solder voids, and ocean telemetry reports a ninety-six hour customs hold. Meet Switchyard: an autonomous multi-agent reconciliation system that resolves cross-system conflicts before a sixty-four thousand dollar per hour factory line stops.",
-      "audioFile": "vo/open.wav",
-      "voDurationSec": 40,
-      "voStartFrame": 12,
-      "durationInFrames": 1233
+      "durationInFrames": 1077,
+      "durationSec": 35.9,
+      "lines": [
+        {
+          "file": "vo/open-1.wav",
+          "text": "In high-value manufacturing, enterprise systems constantly disagree.",
+          "startSec": 0.6,
+          "startFrame": 18,
+          "seconds": 4.64,
+          "frames": 140
+        },
+        {
+          "file": "vo/open-2.wav",
+          "text": "Your ERP says 4,000 silicon-carbide power modules on PO-8841 shipped on time.",
+          "startSec": 5.58,
+          "startFrame": 167,
+          "seconds": 6.64,
+          "frames": 200
+        },
+        {
+          "file": "vo/open-3.wav",
+          "text": "But warehouse dock scans show only 350 usable units, quality control quarantined 800 for solder voids, and ocean telemetry reports a 96-hour customs hold.",
+          "startSec": 12.56,
+          "startFrame": 377,
+          "seconds": 12.24,
+          "frames": 368
+        },
+        {
+          "file": "vo/open-4.wav",
+          "text": "Meet Switchyard: an autonomous multi-agent reconciliation system that resolves cross-system conflicts before a $64,000/hr factory line stops.",
+          "startSec": 25.14,
+          "startFrame": 754,
+          "seconds": 9.96,
+          "frames": 299
+        }
+      ]
     },
     "zetaris": {
       "id": "zetaris",
-      "text": "Layer One is the Zetaris Data Harness. Instead of brittle point-to-point ETL, Switchyard queries ERP purchase orders, warehouse inventory ledgers, quality incident tickets, and live carrier feeds through single-statement Zetaris Lightning SQL. Every query carries a fresh request UUID and maps conflicting records directly into a live provenance graph.",
-      "audioFile": "vo/zetaris.wav",
-      "voDurationSec": 29.08,
-      "voStartFrame": 11,
-      "durationInFrames": 903
+      "durationInFrames": 725,
+      "durationSec": 24.17,
+      "lines": [
+        {
+          "file": "vo/zetaris-1.wav",
+          "text": "Layer One is the Zetaris Data Harness.",
+          "startSec": 0.45,
+          "startFrame": 14,
+          "seconds": 2.44,
+          "frames": 74
+        },
+        {
+          "file": "vo/zetaris-2.wav",
+          "text": "Instead of brittle ETL pipelines, Switchyard queries ERP purchase orders, warehouse inventory ledgers, quality tickets, and live carrier feeds through single-statement Zetaris Lightning SQL.",
+          "startSec": 3.23,
+          "startFrame": 97,
+          "seconds": 12.48,
+          "frames": 375
+        },
+        {
+          "file": "vo/zetaris-3.wav",
+          "text": "Every query carries a fresh request UUID and maps conflicting records directly into a live provenance graph.",
+          "startSec": 16.05,
+          "startFrame": 482,
+          "seconds": 7.36,
+          "frames": 221
+        }
+      ]
     },
     "engines": {
       "id": "engines",
-      "text": "Layer Two runs all four Meterless Engines inside a non-linear adversarial loop. When the Reconciler proposes a partial answer in Round One, the Conflict Critic rejects it for missing acoustic lab evidence and forces a targeted Round Two SQL re-query. Scout Intent routes each task by blast radius, World Model enforces optimistic concurrency across fifteen state transitions, Markovian capsules compress context tokens by eighty-four percent, and H-MEM recalls and commits supplier precedents across sessions.",
-      "audioFile": "vo/engines.wav",
-      "voDurationSec": 36.08,
-      "voStartFrame": 11,
-      "durationInFrames": 1113
+      "durationInFrames": 1060,
+      "durationSec": 35.33,
+      "lines": [
+        {
+          "file": "vo/engines-1.wav",
+          "text": "Layer Two runs all four Meterless Engines inside a non-linear adversarial loop.",
+          "startSec": 0.45,
+          "startFrame": 14,
+          "seconds": 6.16,
+          "frames": 185
+        },
+        {
+          "file": "vo/engines-2.wav",
+          "text": "When the Reconciler proposes a partial answer in Round One, the Conflict Critic rejects it for missing acoustic lab evidence and forces a targeted Round Two SQL re-query.",
+          "startSec": 6.95,
+          "startFrame": 209,
+          "seconds": 10.68,
+          "frames": 321
+        },
+        {
+          "file": "vo/engines-3.wav",
+          "text": "Scout Intent routes each task by blast radius, World Model enforces optimistic concurrency across 15 state transitions, Markovian compresses context tokens by 84%, and H-MEM commits supplier precedents across sessions.",
+          "startSec": 17.97,
+          "startFrame": 539,
+          "seconds": 16.6,
+          "frames": 499
+        }
+      ]
     },
     "nemotron": {
       "id": "nemotron",
-      "text": "Layer Three powers every agent through Meterless Nightshift on port eighty-eighty-eight using dual NVIDIA Nemotron lanes. Nemotron Three-Point-Five Lightning Thirty-B handles low-latency SQL planning and discovery, while Nemotron Three-Point-Five Super One-Twenty-B executes deep adversarial critique and policy verification, logging cryptographic model receipts on every turn.",
-      "audioFile": "vo/nemotron.wav",
-      "voDurationSec": 27.24,
-      "voStartFrame": 11,
-      "durationInFrames": 848
+      "durationInFrames": 734,
+      "durationSec": 24.47,
+      "lines": [
+        {
+          "file": "vo/nemotron-1.wav",
+          "text": "Layer Three powers every agent through Meterless Nightshift on port 8088 using dual NVIDIA Nemotron lanes.",
+          "startSec": 0.45,
+          "startFrame": 14,
+          "seconds": 7.6,
+          "frames": 228
+        },
+        {
+          "file": "vo/nemotron-2.wav",
+          "text": "Nemotron 3.5 Lightning 30B handles low-latency SQL discovery, while Nemotron 3.5 Super 120B executes deep adversarial critique and policy verification, logging cryptographic model receipts on every turn.",
+          "startSec": 8.39,
+          "startFrame": 252,
+          "seconds": 15.32,
+          "frames": 460
+        }
+      ]
     },
     "outro": {
       "id": "outro",
-      "text": "Once all three conflicts are corroborated, Switchyard issues a sourced remediation order: releasing three hundred fifty verified units, rejecting the defective sub-lot, and splitting a three thousand six hundred fifty unit emergency order across Silicore Dresden and Pacific Semi. Total impact: eighty-five hours of downtime prevented and five point four million dollars saved. Switchyard: reconcile reality before line-down.",
-      "audioFile": "vo/outro.wav",
-      "voDurationSec": 29.84,
-      "voStartFrame": 11,
-      "durationInFrames": 942
+      "durationInFrames": 928,
+      "durationSec": 30.93,
+      "lines": [
+        {
+          "file": "vo/outro-1.wav",
+          "text": "Once all three conflicts are corroborated, Switchyard issues a sourced remediation order: releasing 350 verified units, rejecting the defective sub-lot, and splitting a 3,650-unit emergency order across Silicore Dresden and Pacific Semi.",
+          "startSec": 0.45,
+          "startFrame": 14,
+          "seconds": 17.8,
+          "frames": 534
+        },
+        {
+          "file": "vo/outro-2.wav",
+          "text": "Total impact: 85 hours of downtime prevented and $5.42M saved.",
+          "startSec": 18.59,
+          "startFrame": 558,
+          "seconds": 6.2,
+          "frames": 186
+        },
+        {
+          "file": "vo/outro-3.wav",
+          "text": "Switchyard. Reconcile reality before line-down.",
+          "startSec": 25.13,
+          "startFrame": 754,
+          "seconds": 4,
+          "frames": 120
+        }
+      ]
     }
   },
   "order": [

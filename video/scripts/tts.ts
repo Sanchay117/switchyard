@@ -1,13 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
-import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { NARRATION, NARRATION_VOICE, SceneId } from "../src/narration";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 
-function loadEnvKey(): string | undefined {
+function loadEnvKey(): string {
   if (process.env.DEEPGRAM_API_KEY) return process.env.DEEPGRAM_API_KEY;
   const candidates = [
     path.resolve(ROOT, "../.env"),
@@ -15,101 +15,92 @@ function loadEnvKey(): string | undefined {
   ];
   for (const envPath of candidates) {
     if (fs.existsSync(envPath)) {
-      for (const line of fs.readFileSync(envPath, "utf8").split("\n")) {
-        const m = line.match(/^\s*DEEPGRAM_API_KEY\s*=\s*(.+?)\s*$/);
-        if (m) return m[1].replace(/^["']|["']$/g, "");
-      }
+      const m = fs
+        .readFileSync(envPath, "utf8")
+        .match(/^\s*DEEPGRAM_API_KEY\s*=\s*"?([^"\n\r]+)"?/m);
+      if (m?.[1]) return m[1].trim();
     }
   }
-  return undefined;
+  throw new Error("DEEPGRAM_API_KEY missing");
 }
 
 const VO_DIR = path.join(ROOT, "public/vo");
 const OUT_TIMING = path.join(ROOT, "src/generated/timing.json");
+const CACHE_PATH = path.join(ROOT, "src/generated/tts-cache.json");
 const FPS = 30;
-const TRANSITION_FRAMES = 14;
+const GAP = 0.34;
+const TRANSITION_FRAMES = 12;
 
-function wavDurationSec(buf: Buffer): number {
-  let offset = 12;
-  let byteRate = 48000 * 2;
-  let dataBytes = buf.length - 44;
-  while (offset + 8 <= buf.length) {
-    const id = buf.toString("ascii", offset, offset + 4);
-    const size = buf.readUInt32LE(offset + 4);
+function wavSeconds(buf: Buffer): number {
+  let off = 12;
+  let byteRate = 96000;
+  while (off + 8 <= buf.length) {
+    const id = buf.toString("ascii", off, off + 4);
+    let size = buf.readUInt32LE(off + 4);
     if (id === "fmt ") {
-      byteRate = buf.readUInt32LE(offset + 8 + 8);
-    } else if (id === "data") {
-      dataBytes = size > 0 && size <= buf.length - offset - 8 ? size : buf.length - (offset + 8);
-      break;
+      byteRate = buf.readUInt32LE(off + 16);
     }
-    offset += 8 + size + (size % 2);
+    if (id === "data") {
+      if (size === 0 || size === 0xffffffff || off + 8 + size > buf.length) {
+        size = buf.length - off - 8;
+      }
+      return size / byteRate;
+    }
+    off += 8 + size + (size % 2);
   }
-  return dataBytes / byteRate;
+  throw new Error("no data chunk");
 }
 
 function fixWavHeader(buf: Buffer): Buffer {
   const out = Buffer.from(buf);
-  let offset = 12;
-  while (offset + 8 <= out.length) {
-    const id = out.toString("ascii", offset, offset + 4);
-    const size = out.readUInt32LE(offset + 4);
+  let off = 12;
+  while (off + 8 <= out.length) {
+    const id = out.toString("ascii", off, off + 4);
+    const size = out.readUInt32LE(off + 4);
     if (id === "data") {
-      const actualData = out.length - (offset + 8);
-      out.writeUInt32LE(actualData, offset + 4);
+      const actualData = out.length - (off + 8);
+      out.writeUInt32LE(actualData, off + 4);
       out.writeUInt32LE(out.length - 8, 4);
       break;
     }
-    offset += 8 + size + (size % 2);
+    off += 8 + size + (size % 2);
   }
   return out;
 }
 
-async function synthDeepgram(text: string, apiKey: string): Promise<Buffer> {
-  const url = `https://api.deepgram.com/v1/speak?model=${encodeURIComponent(
-    NARRATION_VOICE
-  )}&encoding=linear16&sample_rate=48000&container=wav`;
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      Authorization: `Token ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ text }),
-  });
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`Deepgram TTS ${res.status}: ${body}`);
+async function speak(key: string, text: string): Promise<Buffer> {
+  const url = `https://api.deepgram.com/v1/speak?model=${NARRATION_VOICE}&encoding=linear16&sample_rate=48000&container=wav`;
+  for (let attempt = 1; ; attempt++) {
+    const r = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Token ${key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    });
+    if (r.ok) return fixWavHeader(Buffer.from(await r.arrayBuffer()));
+    if (attempt >= 3) {
+      throw new Error(`Deepgram ${r.status}: ${(await r.text()).slice(0, 200)}`);
+    }
+    await new Promise((res) => setTimeout(res, 1200 * attempt));
   }
-  const raw = Buffer.from(await res.arrayBuffer());
-  return fixWavHeader(raw);
 }
 
-function synthLocalSay(text: string, wavPath: string): Buffer {
-  const tmpAiff = `${wavPath}.tmp.aiff`;
-  execFileSync("/usr/bin/say", ["-r", "188", "-o", tmpAiff, text]);
-  execFileSync("/opt/homebrew/bin/ffmpeg", [
-    "-y",
-    "-i",
-    tmpAiff,
-    "-ar",
-    "48000",
-    "-ac",
-    "1",
-    "-c:a",
-    "pcm_s16le",
-    wavPath,
-  ]);
-  if (fs.existsSync(tmpAiff)) fs.unlinkSync(tmpAiff);
-  return fs.readFileSync(wavPath);
+export interface TimedLine {
+  file: string;
+  text: string;
+  startSec: number;
+  startFrame: number;
+  seconds: number;
+  frames: number;
 }
 
 export interface SceneTiming {
   id: SceneId;
-  text: string;
-  audioFile: string;
-  voDurationSec: number;
-  voStartFrame: number;
   durationInFrames: number;
+  durationSec: number;
+  lines: TimedLine[];
 }
 
 export interface TimingManifest {
@@ -126,50 +117,64 @@ async function main() {
   fs.mkdirSync(VO_DIR, { recursive: true });
   fs.mkdirSync(path.dirname(OUT_TIMING), { recursive: true });
 
-  const apiKey = loadEnvKey();
+  const key = loadEnvKey();
+  const cache: Record<string, string> = fs.existsSync(CACHE_PATH)
+    ? JSON.parse(fs.readFileSync(CACHE_PATH, "utf8"))
+    : {};
+
   const scenes = {} as Record<SceneId, SceneTiming>;
   const order: SceneId[] = [];
 
-  for (const seg of NARRATION) {
-    const wavPath = path.join(VO_DIR, `${seg.id}.wav`);
-    const hashPath = path.join(VO_DIR, `${seg.id}.txt`);
-    const cacheKey = `${NARRATION_VOICE}::${seg.text}`;
-    let buf: Buffer;
+  for (const scene of NARRATION) {
+    let t = scene.lead;
+    const lines: TimedLine[] = [];
 
-    if (
-      fs.existsSync(wavPath) &&
-      fs.existsSync(hashPath) &&
-      fs.readFileSync(hashPath, "utf8") === cacheKey
-    ) {
-      buf = fs.readFileSync(wavPath);
-      console.log(`cached  ${seg.id}.wav`);
-    } else if (apiKey) {
-      console.log(`synth   ${seg.id}.wav (${seg.text.length} chars via Deepgram Aura-2)`);
-      buf = await synthDeepgram(seg.text, apiKey);
-      fs.writeFileSync(wavPath, buf);
-      fs.writeFileSync(hashPath, cacheKey);
-    } else {
-      console.log(`synth   ${seg.id}.wav (local fallback)`);
-      buf = synthLocalSay(seg.text, wavPath);
-      fs.writeFileSync(hashPath, cacheKey);
+    for (const [i, line] of scene.lines.entries()) {
+      const file = `${scene.id}-${i + 1}.wav`;
+      const wavPath = path.join(VO_DIR, file);
+      const say = line.say ?? line.text;
+      const hash = createHash("sha256")
+        .update(`${NARRATION_VOICE}|${say}`)
+        .digest("hex")
+        .slice(0, 16);
+
+      let buf: Buffer;
+      if (cache[file] === hash && fs.existsSync(wavPath)) {
+        buf = fs.readFileSync(wavPath);
+      } else {
+        buf = await speak(key, say);
+        fs.writeFileSync(wavPath, buf);
+        cache[file] = hash;
+        console.log(`spoke ${file} (${NARRATION_VOICE})`);
+      }
+
+      const seconds = Number(wavSeconds(buf).toFixed(3));
+      const startFrame = Math.round(t * FPS);
+      const frames = Math.ceil(seconds * FPS);
+      lines.push({
+        file: `vo/${file}`,
+        text: line.text,
+        startSec: Number(t.toFixed(3)),
+        startFrame,
+        seconds,
+        frames,
+      });
+      t += seconds + GAP;
     }
 
-    const voDur = wavDurationSec(buf);
-    const totalSec = seg.visualLeadSec + voDur + seg.visualTailSec;
+    const totalSec = t - GAP + scene.tail;
     const durationInFrames = Math.ceil(totalSec * FPS);
-    const voStartFrame = Math.round(seg.visualLeadSec * FPS);
-
-    scenes[seg.id] = {
-      id: seg.id,
-      text: seg.text,
-      audioFile: `vo/${seg.id}.wav`,
-      voDurationSec: Number(voDur.toFixed(3)),
-      voStartFrame,
+    scenes[scene.id] = {
+      id: scene.id,
       durationInFrames,
+      durationSec: Number((durationInFrames / FPS).toFixed(2)),
+      lines,
     };
-    order.push(seg.id);
+    order.push(scene.id);
     console.log(
-      `        vo=${voDur.toFixed(2)}s  scene=${(durationInFrames / FPS).toFixed(2)}s (${durationInFrames}f)`
+      `${scene.id.padEnd(10)} ${scenes[scene.id].durationSec
+        .toFixed(1)
+        .padStart(5)}s  [${lines.map((l) => `${l.seconds.toFixed(1)}s`).join(" + ")}]`
     );
   }
 
@@ -186,9 +191,10 @@ async function main() {
     order,
   };
 
+  fs.writeFileSync(CACHE_PATH, JSON.stringify(cache, null, 2));
   fs.writeFileSync(OUT_TIMING, JSON.stringify(manifest, null, 2));
   console.log(
-    `\nTotal composition: ${manifest.totalDurationSec}s (${totalDurationInFrames} frames @ ${FPS}fps)`
+    `\nTotal composition: ${manifest.totalDurationSec}s (${totalDurationInFrames} frames @ ${FPS}fps, voice=${NARRATION_VOICE})`
   );
 }
 
