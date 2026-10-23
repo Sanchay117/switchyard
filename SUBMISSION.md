@@ -40,3 +40,11 @@ Switchyard combines **Zetaris federated SQL** with a **Markovian-bounded adversa
 
 ## 5. Pre-Existing Components Declaration
 None. All code, datasets, SQL scripts, tests, slide deck, and video assets were created during the Open Agent Hackathon 2026 build window (22-27 October 2026).
+
+## 6. Submission Deliverables Included in Repository
+- **Mastered Demo Video (2m 46s, 1080p30, `-16 LUFS`):** `video/out/switchyard-final.mp4`
+- **Slide Deck (8-slide presentation):** `docs/deck.html` (also served at `http://127.0.0.1:8050/deck`)
+- **High-DPI Product Screenshots:** `docs/command-center.png`, `docs/conflict-reconciliation.png`, `docs/meterless-engines.png`, `docs/nightshift-receipts.png`, `docs/zetaris-sql.png`
+- **Official Smoke Test & Conformance Suite:** `smoke_test.py` and `tests/` (`python3 -m unittest discover -s tests -v`)
+- **5 Benchmark Disruption Cases & Full Traces:** `input_examples/case_01..05.json` and `output_examples/case_01..05_trace.json` + `_report.md`
+

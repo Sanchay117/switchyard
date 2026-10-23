@@ -45,6 +45,28 @@ python3 -m agent.main --case CASE-01 --live
 
 ---
 
+## 1.5 Demo Video & Command Center Screenshots
+
+- **Full HD Demo Video (2m 46s, 1080p30, EBU R128 `-16 LUFS` mastered):** [`video/out/switchyard-final.mp4`](video/out/switchyard-final.mp4)
+- **Interactive HTML Slide Deck:** [`docs/deck.html`](docs/deck.html)
+
+### Command Center Overview (4 Conflicting Zetaris Sources & KPIs)
+![Switchyard Command Center](docs/command-center.png)
+
+### Non-Linear Multi-Agent Loop & World Model Conflict Matrix
+![Conflict Reconciliation & Agent Loop](docs/conflict-reconciliation.png)
+
+### Layer 02 (BUILD): All 4 Meterless Engines Active
+![Meterless Engines Telemetry](docs/meterless-engines.png)
+
+### Layer 03 (POWER): Meterless Nightshift & Dual NVIDIA Nemotron Model Receipts
+![Nightshift & Nemotron Receipts](docs/nightshift-receipts.png)
+
+### Layer 01 (DATA): Zetaris Federated SQL Workbench
+![Zetaris Federated SQL Workbench](docs/zetaris-sql.png)
+
+---
+
 ## 2. Why Switchyard Exists (The Fragmented Intelligence Problem)
 
 In automotive and power-electronics manufacturing ($52,000 to $78,000/hour line-stop cost), four enterprise systems routinely disagree about the exact same purchase order:

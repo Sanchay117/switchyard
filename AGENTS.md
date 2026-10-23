@@ -162,4 +162,7 @@ The complete **Switchyard** system is implemented and verified in this repositor
 - `agent/orchestrator.py`: 6-step iterative multi-agent collaboration loop (`Planner` -> `Reconciler Round 1` -> `Conflict Critic` -> `Reconciler Round 2` -> `Risk Escalator` -> `Sourced Reporter`).
 - `tests/`: 8 automated unit, conformance, and end-to-end tests (`python3 -m unittest discover -s tests -v`).
 - `web/index.html` & `docs/deck.html`: Interactive Web Command Center and 8-slide presentation deck (`python3 scripts/build_web_assets.py` to rebuild; `python3 -m agent.main --serve` to serve on `http://127.0.0.1:8050`).
+- `docs/*.png`: High-DPI Retina screenshots captured from `web/index.html` via `video/scripts/capture_ui.ts` (`command-center.png`, `conflict-reconciliation.png`, `meterless-engines.png`, `nightshift-receipts.png`, `zetaris-sql.png`).
+- `video/`: Complete Remotion 1080p30 demo video pipeline (`2m 46s`, `4983 frames @ 30fps`) featuring persistent telemetry chrome, 3D perspective glass browser windows, animated cubic-bezier Zetaris SQL node graphs, Deepgram Aura-2 voiceover narration (`video/scripts/tts.ts`), synthesized 48kHz stereo electronic synth/sub-bass score + UI SFX (`video/scripts/sfx.ts`), and EBU R128 `-16 LUFS` loudness mastering (`video/out/switchyard-final.mp4`).
+
 

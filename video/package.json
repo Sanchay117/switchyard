@@ -1,0 +1,28 @@
+{
+  "name": "switchyard-video",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "capture": "tsx scripts/capture_ui.ts",
+    "sfx": "tsx scripts/sfx.ts",
+    "tts": "tsx scripts/tts.ts",
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts Switchyard out/switchyard.mp4 --codec=h264 --crf=16 --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=256k",
+    "master": "ffmpeg -y -i out/switchyard.mp4 -af loudnorm=I=-16:TP=-1.5:LRA=11 -c:v copy -c:a aac -b:a 256k out/switchyard-final.mp4",
+    "build": "npm run capture && npm run sfx && npm run tts && npm run render && npm run master"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.448",
+    "@remotion/transitions": "4.0.448",
+    "playwright": "^1.52.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "remotion": "4.0.448"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.0.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

@@ -3,10 +3,12 @@
 .env.local
 .env.*.local
 
-# Local reference PDFs and large archives
+# Local reference PDFs, reference videos, and large archives
 *.pdf
 *.zip
+Hizz_*.mp4
 zetaris-platform/
+video/out/switchyard.mp4
 
 # Python
 __pycache__/
@@ -20,9 +22,12 @@ dist/
 build/
 
 # Node / Web / Video
+node_modules
 node_modules/
+video/node_modules
 video/node_modules/
 video/build/
+video/public/music/*.wav
 .DS_Store
 
 # Runtime logs and temporary state

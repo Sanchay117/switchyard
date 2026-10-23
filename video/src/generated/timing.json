@@ -1,0 +1,56 @@
+{
+  "fps": 30,
+  "transitionFrames": 14,
+  "totalDurationInFrames": 4983,
+  "totalDurationSec": 166.1,
+  "voice": "aura-2-apollo-en",
+  "scenes": {
+    "open": {
+      "id": "open",
+      "text": "In high-value manufacturing, enterprise systems constantly disagree. Your ERP says four thousand silicon-carbide power modules shipped on time. But warehouse dock scans show only three hundred fifty usable units, quality control quarantined eight hundred for solder voids, and ocean telemetry reports a ninety-six hour customs hold. Meet Switchyard: an autonomous multi-agent reconciliation system that resolves cross-system conflicts before a sixty-four thousand dollar per hour factory line stops.",
+      "audioFile": "vo/open.wav",
+      "voDurationSec": 40,
+      "voStartFrame": 12,
+      "durationInFrames": 1233
+    },
+    "zetaris": {
+      "id": "zetaris",
+      "text": "Layer One is the Zetaris Data Harness. Instead of brittle point-to-point ETL, Switchyard queries ERP purchase orders, warehouse inventory ledgers, quality incident tickets, and live carrier feeds through single-statement Zetaris Lightning SQL. Every query carries a fresh request UUID and maps conflicting records directly into a live provenance graph.",
+      "audioFile": "vo/zetaris.wav",
+      "voDurationSec": 29.08,
+      "voStartFrame": 11,
+      "durationInFrames": 903
+    },
+    "engines": {
+      "id": "engines",
+      "text": "Layer Two runs all four Meterless Engines inside a non-linear adversarial loop. When the Reconciler proposes a partial answer in Round One, the Conflict Critic rejects it for missing acoustic lab evidence and forces a targeted Round Two SQL re-query. Scout Intent routes each task by blast radius, World Model enforces optimistic concurrency across fifteen state transitions, Markovian capsules compress context tokens by eighty-four percent, and H-MEM recalls and commits supplier precedents across sessions.",
+      "audioFile": "vo/engines.wav",
+      "voDurationSec": 36.08,
+      "voStartFrame": 11,
+      "durationInFrames": 1113
+    },
+    "nemotron": {
+      "id": "nemotron",
+      "text": "Layer Three powers every agent through Meterless Nightshift on port eighty-eighty-eight using dual NVIDIA Nemotron lanes. Nemotron Three-Point-Five Lightning Thirty-B handles low-latency SQL planning and discovery, while Nemotron Three-Point-Five Super One-Twenty-B executes deep adversarial critique and policy verification, logging cryptographic model receipts on every turn.",
+      "audioFile": "vo/nemotron.wav",
+      "voDurationSec": 27.24,
+      "voStartFrame": 11,
+      "durationInFrames": 848
+    },
+    "outro": {
+      "id": "outro",
+      "text": "Once all three conflicts are corroborated, Switchyard issues a sourced remediation order: releasing three hundred fifty verified units, rejecting the defective sub-lot, and splitting a three thousand six hundred fifty unit emergency order across Silicore Dresden and Pacific Semi. Total impact: eighty-five hours of downtime prevented and five point four million dollars saved. Switchyard: reconcile reality before line-down.",
+      "audioFile": "vo/outro.wav",
+      "voDurationSec": 29.84,
+      "voStartFrame": 11,
+      "durationInFrames": 942
+    }
+  },
+  "order": [
+    "open",
+    "zetaris",
+    "engines",
+    "nemotron",
+    "outro"
+  ]
+}
