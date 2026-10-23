@@ -1,0 +1,13 @@
+{
+  "case_id": "CASE-05",
+  "title": "PO-8960 High-Voltage Contactor EDI Over-Reporting & Phantom Inventory",
+  "po_number": "PO-8960",
+  "sku": "HV-CONT-400A",
+  "production_line": "Line-B Inverter",
+  "operator_role": "Inventory Control & Finance Lead",
+  "question": "ERP says all 3,200 units of HV-CONT-400A on PO-8960 from Apex Wafer Corp are DELIVERED_COMPLETE, and Accounts Payable is about to release full payment. However, Bin-B14 physical count does not match. Query Zetaris across ERP, WMS, QMS, and EVA Air cargo manifests to prove where the missing 1,100 units actually are and protect Line-B runway.",
+  "expected_conflicts": [
+    "ERP batch import shows 3,200 units DELIVERED_COMPLETE vs WMS RFID gate count of 2,100 units (1,100-unit phantom inventory discrepancy).",
+    "Carrier feed CAR-905 and QMS-435 prove Apex Wafer Corp combined two split shipments into one EDI ASN; 1,100 units were rolled to flight BR-0624 (+72h delay)."
+  ]
+}

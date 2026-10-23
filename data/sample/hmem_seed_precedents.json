@@ -1,0 +1,38 @@
+[
+  {
+    "memory_id": "HMEM-PREC-001",
+    "tier": "PRECEDENT",
+    "supplier_id": "SUP-101",
+    "supplier_name": "Apex Wafer Corp",
+    "sku_family": "SIC-MOD",
+    "session_date": "2026-09-14",
+    "incident_summary": "Prior Q3 lot LOT-840A from Apex Fab #2 exhibited 15.2% solder-void failure while ERP showed SHIPPED_ON_TIME.",
+    "learned_rule": "Never trust Apex Wafer Corp EDI ASN status alone when a split air/ocean shipment occurs; always cross-verify WMS physical receipt and split sub-lot X-ray acoustic logs before rejecting the entire lot.",
+    "provenance": "Historical Ticket QMS-308 + WMS Audit 2026-Q3",
+    "approved_by": "VP Operations"
+  },
+  {
+    "memory_id": "HMEM-PREC-002",
+    "tier": "PRECEDENT",
+    "supplier_id": "SUP-108",
+    "supplier_name": "Silicore Dresden GmbH",
+    "sku_family": "SIC-MOD-1200V",
+    "session_date": "2026-09-29",
+    "incident_summary": "Emergency 48-hour air charter from Silicore Dresden covered 2,000-unit SiC module deficit on Line-B with 0.0% incoming rejection.",
+    "learned_rule": "When Line-B runway drops below 40 hours on SIC-MOD-1200V, split emergency allocation between Silicore Dresden (up to 2,400 units, 2-day air lead) and Pacific Semi Foundry (overflow) to prevent $64,000/hr line-stop.",
+    "provenance": "CAPA-2026-112",
+    "approved_by": "Supply Chain Risk Committee"
+  },
+  {
+    "memory_id": "HMEM-PREC-003",
+    "tier": "SEMANTIC",
+    "supplier_id": "SUP-204",
+    "supplier_name": "voltGrid Energy Ltd",
+    "sku_family": "LFP-CELL-280AH",
+    "session_date": "2026-10-04",
+    "incident_summary": "LFP prismatic cells exposed to >40C for >6 hours showed >5% DCIR increase and failed automotive cycle warranty.",
+    "learned_rule": "Any LFP-CELL-280AH pallet with transit logger temperature >40C AND DCIR rise >5% must be blocked from EV Line-A and reallocated to stationary BESS grade.",
+    "provenance": "Battery Engineering Spec BES-402",
+    "approved_by": "Chief Battery Engineer"
+  }
+]

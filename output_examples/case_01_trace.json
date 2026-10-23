@@ -1,0 +1,1692 @@
+{
+  "run_id": "RUN-20261023-075302-091188",
+  "timestamp_utc": "2026-10-23T07:53:02.261956+00:00",
+  "duration_ms": 0.57,
+  "execution_mode": "SAMPLE_MODE",
+  "question": "ERP shows PO-8841 (4,000 units of SIC-MOD-1200V from Apex Wafer Corp) is SHIPPED_ON_TIME for Line-B Inverter, but the Dock-4 supervisor says we are hours from a line-stop. Reconcile ERP, Warehouse WMS, Quality QMS, and live Carrier telemetry through Zetaris, explain why the systems disagree, verify which sub-lots can be safely released, and compute the lowest-cost emergency supplier split to prevent a Line-B stop.",
+  "po_number": "PO-8841",
+  "sku": "SIC-MOD-1200V",
+  "production_line": "Line-B Inverter",
+  "confidence_score": 0.96,
+  "final_report_markdown": "### Executive Summary & Sourced Verdict (`PO-8841` / `SIC-MOD-1200V`)\n\n- **Disruption Status:** ERP claims `PO-8841` (**4,000 units** from **Apex Wafer Corp**) is `SHIPPED_ON_TIME` with ETA `2026-10-25` (`[zetaris_erp.purchase_orders#PO-8841]`). Cross-system reconciliation through **Zetaris** proves this status is false.\n- **Physical Reality:** Warehouse dock telemetry (`[zetaris_wms.inventory_ledger#WMS-701]`) shows only **350 unrestricted units** available (35.9h runway on **Line-B Inverter** at 32 units/hr burn rate), **800 units quarantined** in `LOT-992A`, and **2,850 units missing/delayed**.\n- **Transit & Quality Root Cause:** Live carrier telemetry (`[zetaris_rest.carrier_port_feeds#CAR-901]`) confirms `CUSTOMS_HOLD_ORIGIN` (**+96h delay**, revised ETA `2026-10-29T14:00:00Z`: *Ocean bill of lading HBL-8841B held for export dual-use power semiconductor inspection; +96h delay confirmed*). Meanwhile, QMS lab report (`[zetaris_qms.incident_tickets#QMS-419]`) establishes: *Scanning acoustic microscopy confirms furnace profile drift at Apex Fab #2 on Sub-lot 992A-2; Sub-lot 992A-1 is safe to release* (Sub-lot 992A-1 (350 units) passed X-ray at 0.0% void; Sub-lot 992A-2 (800 units) failed at 18.4% void rate).\n\n### Actionable Remediation Order\n\n1. **Dock & Quarantine Disposition (`[zetaris_qms.incident_tickets#QMS-419]`):** Reject 800 units in 992A-2; release 350 units in 992A-1; source 2850 deficit from qualified backup.\n2. **Supply Continuity & Backup Allocation (`3,650 unit shortfall`):**\n  - **Issue Emergency Split PO to Silicore Dresden GmbH (`[zetaris_erp.qualified_suppliers#SUP-108]`):** Order **2,400 units** of `SIC-MOD-1200V` at **$49.50/unit** (2-day air lead time, total spend **$118,800.00**, expedite premium **+$18,000.00**).\n  - **Issue Emergency Split PO to Pacific Semi Foundry (`[zetaris_erp.qualified_suppliers#SUP-115]`):** Order **1,250 units** of `SIC-MOD-1200V` at **$46.80/unit** (3-day air lead time, total spend **$58,500.00**, expedite premium **+$6,000.00**).\n3. **Financial & Runway Protection (`[switchyard.risk_calculator#RISK-PO-8841]`):** Prevents **85.1 hours** of downtime on **Line-B Inverter** (**$5,446,400** gross loss avoided for **$24,000.00** expedite premium; **net savings: $5,422,400**).\n4. **Cross-Session Memory (`[H-MEM#HMEM-PREC-004]`):** Precedent committed to Meterless H-MEM for future sessions involving `Apex Wafer Corp`.\n\n### Confidence & Limitations\n- **Confidence Score:** `0.96` (3/3 cross-source conflicts resolved with 3-way corroboration across Zetaris ERP, WMS, QMS, and Carrier REST tables).\n- **Known Limitations:** Backup allocation lead times assume immediate customs release on air-charter lanes and standard incoming lot acceptance.",
+  "risk_and_remediation_math": {
+    "po_number": "PO-8841",
+    "sku": "SIC-MOD-1200V",
+    "production_line": "Line-B Inverter",
+    "ordered_qty": 4000,
+    "effective_usable_qty": 350,
+    "rejected_quarantine_qty": 800,
+    "in_transit_deficit_qty": 2850,
+    "total_shortfall_units": 3650,
+    "hourly_line_burn_rate": 32,
+    "effective_runway_hours": 10.9,
+    "carrier_delay_hours": 96,
+    "unmitigated_downtime_hours": 85.1,
+    "downtime_cost_per_hour_usd": 64000,
+    "unmitigated_downtime_loss_usd": 5446400,
+    "expedite_premium_usd": 24000.0,
+    "total_replacement_spend_usd": 177300.0,
+    "net_loss_avoided_usd": 5422400,
+    "backup_allocations": [
+      {
+        "supplier_id": "SUP-108",
+        "supplier_name": "Silicore Dresden GmbH",
+        "region": "Germany",
+        "allocated_units": 2400,
+        "expedite_lead_days": 2,
+        "unit_cost_usd": 49.5,
+        "total_spend_usd": 118800.0,
+        "expedite_premium_usd": 18000.0
+      },
+      {
+        "supplier_id": "SUP-115",
+        "supplier_name": "Pacific Semi Foundry",
+        "region": "South Korea",
+        "allocated_units": 1250,
+        "expedite_lead_days": 3,
+        "unit_cost_usd": 46.8,
+        "total_spend_usd": 58500.0,
+        "expedite_premium_usd": 6000.0
+      }
+    ],
+    "critic_final_verdict": "APPROVED_WITH_PROVENANCE"
+  },
+  "source_records": {
+    "zetaris_erp.purchase_orders": {
+      "po_number": "PO-8841",
+      "sku": "SIC-MOD-1200V",
+      "part_name": "1200V SiC Power Module",
+      "production_line": "Line-B Inverter",
+      "supplier_id": "SUP-101",
+      "supplier_name": "Apex Wafer Corp",
+      "ordered_qty": 4000,
+      "unit_cost_usd": 42.0,
+      "erp_status": "SHIPPED_ON_TIME",
+      "promised_eta": "2026-10-25",
+      "incoterms": "CIF_OAKLAND",
+      "buyer_notes": "Vendor portal auto-confirmed full dispatch on 2026-10-19"
+    },
+    "zetaris_wms.inventory_ledger": {
+      "ledger_id": "WMS-701",
+      "po_number": "PO-8841",
+      "sku": "SIC-MOD-1200V",
+      "production_line": "Line-B Inverter",
+      "received_qty": 1150,
+      "usable_unrestricted_qty": 350,
+      "quarantined_qty": 800,
+      "in_transit_deficit_qty": 2850,
+      "lot_code": "LOT-992A",
+      "dock_location": "Dock-4 Quarantine Cage",
+      "hourly_line_burn_rate": 32,
+      "line_runway_hours": 35.9,
+      "downtime_cost_per_hour_usd": 64000,
+      "last_scan_utc": "2026-10-23T06:40:00Z",
+      "warehouse_note": "Only partial air-split 1150 units arrived; 800 units in sub-lot 992A-2 locked by QMS hold; remaining 2850 units still on ocean vessel"
+    },
+    "zetaris_qms.incident_tickets": {
+      "ticket_id": "QMS-419",
+      "po_number": "PO-8841",
+      "sku": "SIC-MOD-1200V",
+      "supplier_id": "SUP-101",
+      "lot_code": "LOT-992A",
+      "severity": "SEV-1_CRITICAL",
+      "qms_status": "HOLD_ACTIVE",
+      "defect_rate_pct": 18.4,
+      "failure_mode": "Substrate solder-void micro-cracking under thermal cycling",
+      "sublot_breakdown": "Sub-lot 992A-1 (350 units) passed X-ray at 0.0% void; Sub-lot 992A-2 (800 units) failed at 18.4% void rate",
+      "supplier_dispute_claim": "Apex Wafer Corp claims all 1150 air-shipped units passed outgoing AOI, blaming carrier shock",
+      "lab_verdict": "Scanning acoustic microscopy confirms furnace profile drift at Apex Fab #2 on Sub-lot 992A-2; Sub-lot 992A-1 is safe to release",
+      "inspector_action_required": "Reject 800 units in 992A-2; release 350 units in 992A-1; source 2850 deficit from qualified backup"
+    },
+    "zetaris_rest.carrier_port_feeds": {
+      "feed_id": "CAR-901",
+      "po_number": "PO-8841",
+      "vessel_or_flight": "MV Pacific Horizon / Split Air CX-884",
+      "origin_port": "Kaohsiung, TW",
+      "destination_port": "Oakland, US",
+      "carrier_status": "CUSTOMS_HOLD_ORIGIN",
+      "reported_delay_hours": 96,
+      "revised_eta": "2026-10-29T14:00:00Z",
+      "units_on_conveyance": 2850,
+      "telemetry_alert": "Ocean bill of lading HBL-8841B held for export dual-use power semiconductor inspection; +96h delay confirmed",
+      "updated_at_utc": "2026-10-23T06:55:00Z"
+    },
+    "zetaris_erp.qualified_suppliers": [
+      {
+        "supplier_id": "SUP-108",
+        "supplier_name": "Silicore Dresden GmbH",
+        "sku": "SIC-MOD-1200V",
+        "qualified_status": "QUALIFIED_BACKUP",
+        "max_weekly_capacity": 2400,
+        "expedite_lead_days": 2,
+        "expedite_unit_cost_usd": 49.5,
+        "historical_defect_rate_pct": 0.4,
+        "region": "Germany",
+        "compliance_tier": "TIER_1_PREFERRED"
+      },
+      {
+        "supplier_id": "SUP-115",
+        "supplier_name": "Pacific Semi Foundry",
+        "sku": "SIC-MOD-1200V",
+        "qualified_status": "QUALIFIED_BACKUP",
+        "max_weekly_capacity": 1500,
+        "expedite_lead_days": 3,
+        "expedite_unit_cost_usd": 46.8,
+        "historical_defect_rate_pct": 1.9,
+        "region": "South Korea",
+        "compliance_tier": "TIER_1_PREFERRED"
+      }
+    ]
+  },
+  "sponsor_technology_evidence": {
+    "zetaris": {
+      "total_sql_queries": 5,
+      "tables_queried": [
+        "zetaris_erp.purchase_orders",
+        "zetaris_erp.qualified_suppliers",
+        "zetaris_qms.incident_tickets",
+        "zetaris_rest.carrier_port_feeds",
+        "zetaris_wms.inventory_ledger"
+      ],
+      "sql_receipts": [
+        {
+          "query_id": "e1794f0c-2bc7-479d-864a-c7b8cb695bf5",
+          "request_id": "ead0326a-bef4-4f6d-b5af-2eaf76364291",
+          "sql": "SELECT * FROM zetaris_erp.purchase_orders WHERE po_number = 'PO-8841'",
+          "source_tables_touched": [
+            "zetaris_erp.purchase_orders"
+          ],
+          "execution_mode": "zetaris-virtualized-sample",
+          "row_count": 1,
+          "latency_ms": 0.02,
+          "columns": [
+            "po_number",
+            "sku",
+            "part_name",
+            "production_line",
+            "supplier_id",
+            "supplier_name",
+            "ordered_qty",
+            "unit_cost_usd",
+            "erp_status",
+            "promised_eta",
+            "incoterms",
+            "buyer_notes"
+          ],
+          "rows": [
+            {
+              "po_number": "PO-8841",
+              "sku": "SIC-MOD-1200V",
+              "part_name": "1200V SiC Power Module",
+              "production_line": "Line-B Inverter",
+              "supplier_id": "SUP-101",
+              "supplier_name": "Apex Wafer Corp",
+              "ordered_qty": 4000,
+              "unit_cost_usd": 42.0,
+              "erp_status": "SHIPPED_ON_TIME",
+              "promised_eta": "2026-10-25",
+              "incoterms": "CIF_OAKLAND",
+              "buyer_notes": "Vendor portal auto-confirmed full dispatch on 2026-10-19"
+            }
+          ]
+        },
+        {
+          "query_id": "18cb20d3-e1a7-4fa0-8437-133cf158cf1b",
+          "request_id": "c463d9ff-8975-4c6e-9233-102c5ca2b209",
+          "sql": "SELECT * FROM zetaris_wms.inventory_ledger WHERE po_number = 'PO-8841'",
+          "source_tables_touched": [
+            "zetaris_wms.inventory_ledger"
+          ],
+          "execution_mode": "zetaris-virtualized-sample",
+          "row_count": 1,
+          "latency_ms": 0.02,
+          "columns": [
+            "ledger_id",
+            "po_number",
+            "sku",
+            "production_line",
+            "received_qty",
+            "usable_unrestricted_qty",
+            "quarantined_qty",
+            "in_transit_deficit_qty",
+            "lot_code",
+            "dock_location",
+            "hourly_line_burn_rate",
+            "line_runway_hours",
+            "downtime_cost_per_hour_usd",
+            "last_scan_utc",
+            "warehouse_note"
+          ],
+          "rows": [
+            {
+              "ledger_id": "WMS-701",
+              "po_number": "PO-8841",
+              "sku": "SIC-MOD-1200V",
+              "production_line": "Line-B Inverter",
+              "received_qty": 1150,
+              "usable_unrestricted_qty": 350,
+              "quarantined_qty": 800,
+              "in_transit_deficit_qty": 2850,
+              "lot_code": "LOT-992A",
+              "dock_location": "Dock-4 Quarantine Cage",
+              "hourly_line_burn_rate": 32,
+              "line_runway_hours": 35.9,
+              "downtime_cost_per_hour_usd": 64000,
+              "last_scan_utc": "2026-10-23T06:40:00Z",
+              "warehouse_note": "Only partial air-split 1150 units arrived; 800 units in sub-lot 992A-2 locked by QMS hold; remaining 2850 units still on ocean vessel"
+            }
+          ]
+        },
+        {
+          "query_id": "9b4cefc4-118a-4479-9d88-db6001052d61",
+          "request_id": "c7fd13cb-e72e-4a13-b6f3-14a2eee6e0b2",
+          "sql": "SELECT * FROM zetaris_rest.carrier_port_feeds WHERE po_number = 'PO-8841'",
+          "source_tables_touched": [
+            "zetaris_rest.carrier_port_feeds"
+          ],
+          "execution_mode": "zetaris-virtualized-sample",
+          "row_count": 1,
+          "latency_ms": 0.01,
+          "columns": [
+            "feed_id",
+            "po_number",
+            "vessel_or_flight",
+            "origin_port",
+            "destination_port",
+            "carrier_status",
+            "reported_delay_hours",
+            "revised_eta",
+            "units_on_conveyance",
+            "telemetry_alert",
+            "updated_at_utc"
+          ],
+          "rows": [
+            {
+              "feed_id": "CAR-901",
+              "po_number": "PO-8841",
+              "vessel_or_flight": "MV Pacific Horizon / Split Air CX-884",
+              "origin_port": "Kaohsiung, TW",
+              "destination_port": "Oakland, US",
+              "carrier_status": "CUSTOMS_HOLD_ORIGIN",
+              "reported_delay_hours": 96,
+              "revised_eta": "2026-10-29T14:00:00Z",
+              "units_on_conveyance": 2850,
+              "telemetry_alert": "Ocean bill of lading HBL-8841B held for export dual-use power semiconductor inspection; +96h delay confirmed",
+              "updated_at_utc": "2026-10-23T06:55:00Z"
+            }
+          ]
+        },
+        {
+          "query_id": "3d9e20e6-1a72-457e-8582-5402b57b3340",
+          "request_id": "71b00ffe-937e-4ee0-8ff9-cb7c5e0f500f",
+          "sql": "SELECT * FROM zetaris_qms.incident_tickets WHERE po_number = 'PO-8841'",
+          "source_tables_touched": [
+            "zetaris_qms.incident_tickets"
+          ],
+          "execution_mode": "zetaris-virtualized-sample",
+          "row_count": 1,
+          "latency_ms": 0.01,
+          "columns": [
+            "ticket_id",
+            "po_number",
+            "sku",
+            "supplier_id",
+            "lot_code",
+            "severity",
+            "qms_status",
+            "defect_rate_pct",
+            "failure_mode",
+            "sublot_breakdown",
+            "supplier_dispute_claim",
+            "lab_verdict",
+            "inspector_action_required"
+          ],
+          "rows": [
+            {
+              "ticket_id": "QMS-419",
+              "po_number": "PO-8841",
+              "sku": "SIC-MOD-1200V",
+              "supplier_id": "SUP-101",
+              "lot_code": "LOT-992A",
+              "severity": "SEV-1_CRITICAL",
+              "qms_status": "HOLD_ACTIVE",
+              "defect_rate_pct": 18.4,
+              "failure_mode": "Substrate solder-void micro-cracking under thermal cycling",
+              "sublot_breakdown": "Sub-lot 992A-1 (350 units) passed X-ray at 0.0% void; Sub-lot 992A-2 (800 units) failed at 18.4% void rate",
+              "supplier_dispute_claim": "Apex Wafer Corp claims all 1150 air-shipped units passed outgoing AOI, blaming carrier shock",
+              "lab_verdict": "Scanning acoustic microscopy confirms furnace profile drift at Apex Fab #2 on Sub-lot 992A-2; Sub-lot 992A-1 is safe to release",
+              "inspector_action_required": "Reject 800 units in 992A-2; release 350 units in 992A-1; source 2850 deficit from qualified backup"
+            }
+          ]
+        },
+        {
+          "query_id": "0df1e57b-3513-4b59-a798-9ab066648a68",
+          "request_id": "97a69b53-1b5f-463d-b381-22ebb0f79b2c",
+          "sql": "SELECT * FROM zetaris_erp.qualified_suppliers WHERE sku = 'SIC-MOD-1200V' ORDER BY expedite_lead_days ASC",
+          "source_tables_touched": [
+            "zetaris_erp.qualified_suppliers"
+          ],
+          "execution_mode": "zetaris-virtualized-sample",
+          "row_count": 3,
+          "latency_ms": 0.02,
+          "columns": [
+            "supplier_id",
+            "supplier_name",
+            "sku",
+            "qualified_status",
+            "max_weekly_capacity",
+            "expedite_lead_days",
+            "expedite_unit_cost_usd",
+            "historical_defect_rate_pct",
+            "region",
+            "compliance_tier"
+          ],
+          "rows": [
+            {
+              "supplier_id": "SUP-108",
+              "supplier_name": "Silicore Dresden GmbH",
+              "sku": "SIC-MOD-1200V",
+              "qualified_status": "QUALIFIED_BACKUP",
+              "max_weekly_capacity": 2400,
+              "expedite_lead_days": 2,
+              "expedite_unit_cost_usd": 49.5,
+              "historical_defect_rate_pct": 0.4,
+              "region": "Germany",
+              "compliance_tier": "TIER_1_PREFERRED"
+            },
+            {
+              "supplier_id": "SUP-115",
+              "supplier_name": "Pacific Semi Foundry",
+              "sku": "SIC-MOD-1200V",
+              "qualified_status": "QUALIFIED_BACKUP",
+              "max_weekly_capacity": 1500,
+              "expedite_lead_days": 3,
+              "expedite_unit_cost_usd": 46.8,
+              "historical_defect_rate_pct": 1.9,
+              "region": "South Korea",
+              "compliance_tier": "TIER_1_PREFERRED"
+            },
+            {
+              "supplier_id": "SUP-101",
+              "supplier_name": "Apex Wafer Corp",
+              "sku": "SIC-MOD-1200V",
+              "qualified_status": "PRIMARY_WATCHLIST",
+              "max_weekly_capacity": 5000,
+              "expedite_lead_days": 7,
+              "expedite_unit_cost_usd": 42.0,
+              "historical_defect_rate_pct": 4.8,
+              "region": "Taiwan",
+              "compliance_tier": "TIER_2_CONDITIONAL"
+            }
+          ]
+        }
+      ]
+    },
+    "meterless_engines": {
+      "scout_intent": {
+        "intent_type": "multi_source_disruption_reconciliation",
+        "risk_level": "CRITICAL",
+        "risk_score": 95,
+        "po_number": "PO-8841",
+        "sku": "SIC-MOD-1200V",
+        "production_line": "Line-B Inverter",
+        "target_zetaris_tables": [
+          "zetaris_erp.purchase_orders",
+          "zetaris_wms.inventory_ledger",
+          "zetaris_qms.incident_tickets",
+          "zetaris_rest.carrier_port_feeds",
+          "zetaris_erp.qualified_suppliers"
+        ],
+        "primary_lane": "Lane 1: Fast Worker",
+        "primary_nemotron_model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+        "verification_lane": "Lane 2: Deep Worker",
+        "verification_nemotron_model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+        "require_risk_escalation_check": true,
+        "routing_rationale": "Scout Intent classified request as 'multi_source_disruption_reconciliation' for PO-8841 (SIC-MOD-1200V on Line-B Inverter) with risk=CRITICAL (95/100). Routed SQL discovery to Lane 1 (nvidia/nemotron-3.5-lightning-30b-a3b) across 5 Zetaris tables and assigned adversarial conflict verification to Lane 2 (nvidia/nemotron-3.5-super-vl-120b-a12b)."
+      },
+      "world_model": {
+        "version": 15,
+        "entity_count": 1,
+        "fact_count": 6,
+        "conflict_count": 3,
+        "resolved_conflict_count": 3,
+        "entities": {
+          "PO-8841": {
+            "entity_id": "PO-8841",
+            "entity_type": "PurchaseOrderInvestigation",
+            "po_number": "PO-8841",
+            "sku": "SIC-MOD-1200V",
+            "production_line": "Line-B Inverter",
+            "intent_type": "multi_source_disruption_reconciliation",
+            "risk_level": "CRITICAL"
+          }
+        },
+        "facts": [
+          {
+            "fact_id": "FACT-001",
+            "entity_id": "PO-8841",
+            "source_table": "zetaris_erp.purchase_orders",
+            "record_key": "PO-8841",
+            "attribute": "erp_status_and_qty",
+            "value": {
+              "ordered_qty": 4000,
+              "erp_status": "SHIPPED_ON_TIME",
+              "promised_eta": "2026-10-25",
+              "supplier_id": "SUP-101",
+              "supplier_name": "Apex Wafer Corp",
+              "unit_cost_usd": 42.0
+            },
+            "recorded_by_agent": "Zetaris Reconciler Agent",
+            "sql_used": "SELECT * FROM zetaris_erp.purchase_orders WHERE po_number = 'PO-8841'",
+            "confidence": 1.0,
+            "version_added": 2
+          },
+          {
+            "fact_id": "FACT-002",
+            "entity_id": "PO-8841",
+            "source_table": "zetaris_wms.inventory_ledger",
+            "record_key": "WMS-701",
+            "attribute": "physical_dock_and_runway",
+            "value": {
+              "received_qty": 1150,
+              "usable_unrestricted_qty": 350,
+              "quarantined_qty": 800,
+              "in_transit_deficit_qty": 2850,
+              "lot_code": "LOT-992A",
+              "line_runway_hours": 35.9,
+              "hourly_line_burn_rate": 32,
+              "downtime_cost_per_hour_usd": 64000
+            },
+            "recorded_by_agent": "Zetaris Reconciler Agent",
+            "sql_used": "SELECT * FROM zetaris_wms.inventory_ledger WHERE po_number = 'PO-8841'",
+            "confidence": 1.0,
+            "version_added": 3
+          },
+          {
+            "fact_id": "FACT-003",
+            "entity_id": "PO-8841",
+            "source_table": "zetaris_rest.carrier_port_feeds",
+            "record_key": "CAR-901",
+            "attribute": "live_carrier_telemetry",
+            "value": {
+              "carrier_status": "CUSTOMS_HOLD_ORIGIN",
+              "reported_delay_hours": 96,
+              "revised_eta": "2026-10-29T14:00:00Z",
+              "telemetry_alert": "Ocean bill of lading HBL-8841B held for export dual-use power semiconductor inspection; +96h delay confirmed"
+            },
+            "recorded_by_agent": "Zetaris Reconciler Agent",
+            "sql_used": "SELECT * FROM zetaris_rest.carrier_port_feeds WHERE po_number = 'PO-8841'",
+            "confidence": 1.0,
+            "version_added": 4
+          },
+          {
+            "fact_id": "FACT-004",
+            "entity_id": "PO-8841",
+            "source_table": "zetaris_qms.incident_tickets",
+            "record_key": "QMS-419",
+            "attribute": "qms_lab_verdict_and_dispute",
+            "value": {
+              "ticket_id": "QMS-419",
+              "severity": "SEV-1_CRITICAL",
+              "defect_rate_pct": 18.4,
+              "failure_mode": "Substrate solder-void micro-cracking under thermal cycling",
+              "sublot_breakdown": "Sub-lot 992A-1 (350 units) passed X-ray at 0.0% void; Sub-lot 992A-2 (800 units) failed at 18.4% void rate",
+              "supplier_dispute_claim": "Apex Wafer Corp claims all 1150 air-shipped units passed outgoing AOI, blaming carrier shock",
+              "lab_verdict": "Scanning acoustic microscopy confirms furnace profile drift at Apex Fab #2 on Sub-lot 992A-2; Sub-lot 992A-1 is safe to release",
+              "inspector_action_required": "Reject 800 units in 992A-2; release 350 units in 992A-1; source 2850 deficit from qualified backup"
+            },
+            "recorded_by_agent": "Zetaris Reconciler Agent (Round 2)",
+            "sql_used": "SELECT * FROM zetaris_qms.incident_tickets WHERE po_number = 'PO-8841'",
+            "confidence": 1.0,
+            "version_added": 9
+          },
+          {
+            "fact_id": "FACT-005",
+            "entity_id": "PO-8841",
+            "source_table": "zetaris_erp.qualified_suppliers",
+            "record_key": "SIC-MOD-1200V",
+            "attribute": "qualified_backup_suppliers",
+            "value": [
+              {
+                "supplier_id": "SUP-108",
+                "supplier_name": "Silicore Dresden GmbH",
+                "sku": "SIC-MOD-1200V",
+                "qualified_status": "QUALIFIED_BACKUP",
+                "max_weekly_capacity": 2400,
+                "expedite_lead_days": 2,
+                "expedite_unit_cost_usd": 49.5,
+                "historical_defect_rate_pct": 0.4,
+                "region": "Germany",
+                "compliance_tier": "TIER_1_PREFERRED"
+              },
+              {
+                "supplier_id": "SUP-115",
+                "supplier_name": "Pacific Semi Foundry",
+                "sku": "SIC-MOD-1200V",
+                "qualified_status": "QUALIFIED_BACKUP",
+                "max_weekly_capacity": 1500,
+                "expedite_lead_days": 3,
+                "expedite_unit_cost_usd": 46.8,
+                "historical_defect_rate_pct": 1.9,
+                "region": "South Korea",
+                "compliance_tier": "TIER_1_PREFERRED"
+              }
+            ],
+            "recorded_by_agent": "Zetaris Reconciler Agent (Round 2)",
+            "sql_used": "SELECT * FROM zetaris_erp.qualified_suppliers WHERE sku = 'SIC-MOD-1200V' ORDER BY expedite_lead_days ASC",
+            "confidence": 1.0,
+            "version_added": 10
+          },
+          {
+            "fact_id": "FACT-006",
+            "entity_id": "PO-8841",
+            "source_table": "switchyard.risk_calculator",
+            "record_key": "RISK-PO-8841",
+            "attribute": "deterministic_remediation_math",
+            "value": {
+              "po_number": "PO-8841",
+              "sku": "SIC-MOD-1200V",
+              "production_line": "Line-B Inverter",
+              "ordered_qty": 4000,
+              "effective_usable_qty": 350,
+              "rejected_quarantine_qty": 800,
+              "in_transit_deficit_qty": 2850,
+              "total_shortfall_units": 3650,
+              "hourly_line_burn_rate": 32,
+              "effective_runway_hours": 10.9,
+              "carrier_delay_hours": 96,
+              "unmitigated_downtime_hours": 85.1,
+              "downtime_cost_per_hour_usd": 64000,
+              "unmitigated_downtime_loss_usd": 5446400,
+              "expedite_premium_usd": 24000.0,
+              "total_replacement_spend_usd": 177300.0,
+              "net_loss_avoided_usd": 5422400,
+              "backup_allocations": [
+                {
+                  "supplier_id": "SUP-108",
+                  "supplier_name": "Silicore Dresden GmbH",
+                  "region": "Germany",
+                  "allocated_units": 2400,
+                  "expedite_lead_days": 2,
+                  "unit_cost_usd": 49.5,
+                  "total_spend_usd": 118800.0,
+                  "expedite_premium_usd": 18000.0
+                },
+                {
+                  "supplier_id": "SUP-115",
+                  "supplier_name": "Pacific Semi Foundry",
+                  "region": "South Korea",
+                  "allocated_units": 1250,
+                  "expedite_lead_days": 3,
+                  "unit_cost_usd": 46.8,
+                  "total_spend_usd": 58500.0,
+                  "expedite_premium_usd": 6000.0
+                }
+              ],
+              "critic_final_verdict": "APPROVED_WITH_PROVENANCE"
+            },
+            "recorded_by_agent": "Risk & Policy Escalation Agent",
+            "sql_used": "DETERMINISTIC_POLICY_ENGINE",
+            "confidence": 1.0,
+            "version_added": 15
+          }
+        ],
+        "conflicts": [
+          {
+            "conflict_id": "CONF-01",
+            "entity_id": "PO-8841",
+            "dimension": "Usable Quantity & Receipt Status",
+            "source_a": "zetaris_erp.purchase_orders#PO-8841",
+            "claim_a": "ordered_qty=4000 with status='SHIPPED_ON_TIME' (promised ETA 2026-10-25)",
+            "source_b": "zetaris_wms.inventory_ledger#WMS-701",
+            "claim_b": "received_qty=1150, usable_unrestricted_qty=350, quarantined_qty=800, deficit=2850 (Only partial air-split 1150 units arrived; 800 units in sub-lot 992A-2 locked by QMS hold; remaining 2850 units still on ocean vessel)",
+            "status": "RESOLVED",
+            "flagged_by_agent": "Zetaris Reconciler Agent",
+            "authoritative_source": "zetaris_wms.inventory_ledger#WMS-701",
+            "resolution_explanation": "Physical dock scan [WMS-701] and QMS ticket [QMS-419] override ERP status 'SHIPPED_ON_TIME'. Only 350 units are unrestricted today; 800 units are held in LOT-992A and 2850 units have not arrived.",
+            "corroborating_sources": [
+              "zetaris_wms.inventory_ledger#WMS-701",
+              "zetaris_qms.incident_tickets#QMS-419",
+              "zetaris_rest.carrier_port_feeds#CAR-901"
+            ],
+            "critic_notes": "REJECTED PROVISIONAL PROPOSAL FOR PO-8841: (1) Unverified Quarantine Lot LOT-992A: Reconciler has not queried zetaris_qms.incident_tickets for PO-8841 to inspect acoustic/lab test verdicts or supplier dispute claims. (2) Unmitigated Runway Gap: Line runway is 35.9h while carrier delay is +96h; Reconciler must query zetaris_erp.qualified_suppliers for SKU='SIC-MOD-1200V' to price and capacity-check qualified backup vendors.",
+            "version_updated": 12
+          },
+          {
+            "conflict_id": "CONF-02",
+            "entity_id": "PO-8841",
+            "dimension": "Transit Schedule & Telemetry Integrity",
+            "source_a": "zetaris_erp.purchase_orders#PO-8841",
+            "claim_a": "ERP status='SHIPPED_ON_TIME', ETA=2026-10-25, notes='Vendor portal auto-confirmed full dispatch on 2026-10-19'",
+            "source_b": "zetaris_rest.carrier_port_feeds#CAR-901",
+            "claim_b": "carrier_status='CUSTOMS_HOLD_ORIGIN', delay=+96h, revised_eta=2026-10-29T14:00:00Z (Ocean bill of lading HBL-8841B held for export dual-use power semiconductor inspection; +96h delay confirmed)",
+            "status": "RESOLVED",
+            "flagged_by_agent": "Zetaris Reconciler Agent",
+            "authoritative_source": "zetaris_rest.carrier_port_feeds#CAR-901",
+            "resolution_explanation": "Live carrier feed [CAR-901] proves 'CUSTOMS_HOLD_ORIGIN' with +96h delay (revised ETA 2026-10-29T14:00:00Z), invalidating ERP promised ETA 2026-10-25.",
+            "corroborating_sources": [
+              "zetaris_rest.carrier_port_feeds#CAR-901",
+              "zetaris_wms.inventory_ledger#WMS-701"
+            ],
+            "critic_notes": "REJECTED PROVISIONAL PROPOSAL FOR PO-8841: (1) Unverified Quarantine Lot LOT-992A: Reconciler has not queried zetaris_qms.incident_tickets for PO-8841 to inspect acoustic/lab test verdicts or supplier dispute claims. (2) Unmitigated Runway Gap: Line runway is 35.9h while carrier delay is +96h; Reconciler must query zetaris_erp.qualified_suppliers for SKU='SIC-MOD-1200V' to price and capacity-check qualified backup vendors.",
+            "version_updated": 13
+          },
+          {
+            "conflict_id": "CONF-03",
+            "entity_id": "PO-8841",
+            "dimension": "Supplier Quality Dispute vs Lab Telemetry",
+            "source_a": "Vendor Claim (Apex Wafer Corp)",
+            "claim_a": "Apex Wafer Corp claims all 1150 air-shipped units passed outgoing AOI, blaming carrier shock",
+            "source_b": "zetaris_qms.incident_tickets#QMS-419",
+            "claim_b": "Lab Verdict: Scanning acoustic microscopy confirms furnace profile drift at Apex Fab #2 on Sub-lot 992A-2; Sub-lot 992A-1 is safe to release | Breakdown: Sub-lot 992A-1 (350 units) passed X-ray at 0.0% void; Sub-lot 992A-2 (800 units) failed at 18.4% void rate",
+            "status": "RESOLVED",
+            "flagged_by_agent": "Zetaris Reconciler Agent (Round 2)",
+            "authoritative_source": "zetaris_qms.incident_tickets#QMS-419",
+            "resolution_explanation": "Empirical lab measurement in [QMS-419] (Scanning acoustic microscopy confirms furnace profile drift at Apex Fab #2 on Sub-lot 992A-2; Sub-lot 992A-1 is safe to release) supersedes unverified vendor dispute claim. Required action: Reject 800 units in 992A-2; release 350 units in 992A-1; source 2850 deficit from qualified backup.",
+            "corroborating_sources": [
+              "zetaris_qms.incident_tickets#QMS-419",
+              "zetaris_wms.inventory_ledger#WMS-701"
+            ],
+            "critic_notes": null,
+            "version_updated": 14
+          }
+        ],
+        "mutation_log": [
+          {
+            "version": 1,
+            "agent": "Planner & Source Mapper Agent",
+            "action": "register_entity",
+            "detail": "Updated entity PO-8841 (PurchaseOrderInvestigation)",
+            "timestamp_utc": "2026-10-23T07:53:02.261500+00:00"
+          },
+          {
+            "version": 2,
+            "agent": "Zetaris Reconciler Agent",
+            "action": "record_fact",
+            "detail": "[zetaris_erp.purchase_orders#PO-8841] PO-8841.erp_status_and_qty = {'ordered_qty': 4000, 'erp_status': 'SHIPPED_ON_TIME', 'promised_eta': '2026-10-25', 'supplier_id': 'SUP-101', 'supplier_name': 'Apex Wafer Corp', 'unit_cost_usd': 42.0}",
+            "timestamp_utc": "2026-10-23T07:53:02.261631+00:00"
+          },
+          {
+            "version": 3,
+            "agent": "Zetaris Reconciler Agent",
+            "action": "record_fact",
+            "detail": "[zetaris_wms.inventory_ledger#WMS-701] PO-8841.physical_dock_and_runway = {'received_qty': 1150, 'usable_unrestricted_qty': 350, 'quarantined_qty': 800, 'in_transit_deficit_qty': 2850, 'lot_code': 'LOT-992A', 'line_runway_hours': 35.9, 'hourly_line_burn_rate': 32, 'downtime_cost_per_hour_usd': 64000}",
+            "timestamp_utc": "2026-10-23T07:53:02.261639+00:00"
+          },
+          {
+            "version": 4,
+            "agent": "Zetaris Reconciler Agent",
+            "action": "record_fact",
+            "detail": "[zetaris_rest.carrier_port_feeds#CAR-901] PO-8841.live_carrier_telemetry = {'carrier_status': 'CUSTOMS_HOLD_ORIGIN', 'reported_delay_hours': 96, 'revised_eta': '2026-10-29T14:00:00Z', 'telemetry_alert': 'Ocean bill of lading HBL-8841B held for export dual-use power semiconductor inspection; +96h delay confirmed'}",
+            "timestamp_utc": "2026-10-23T07:53:02.261643+00:00"
+          },
+          {
+            "version": 5,
+            "agent": "Zetaris Reconciler Agent",
+            "action": "flag_conflict",
+            "detail": "Conflict on PO-8841 (Usable Quantity & Receipt Status): zetaris_erp.purchase_orders#PO-8841 vs zetaris_wms.inventory_ledger#WMS-701",
+            "timestamp_utc": "2026-10-23T07:53:02.261647+00:00"
+          },
+          {
+            "version": 6,
+            "agent": "Zetaris Reconciler Agent",
+            "action": "flag_conflict",
+            "detail": "Conflict on PO-8841 (Transit Schedule & Telemetry Integrity): zetaris_erp.purchase_orders#PO-8841 vs zetaris_rest.carrier_port_feeds#CAR-901",
+            "timestamp_utc": "2026-10-23T07:53:02.261652+00:00"
+          },
+          {
+            "version": 7,
+            "agent": "Conflict & Evidence Critic Agent",
+            "action": "challenge_conflict",
+            "detail": "Critic challenged CONF-01: REJECTED PROVISIONAL PROPOSAL FOR PO-8841: (1) Unverified Quarantine Lot LOT-992",
+            "timestamp_utc": "2026-10-23T07:53:02.261724+00:00"
+          },
+          {
+            "version": 8,
+            "agent": "Conflict & Evidence Critic Agent",
+            "action": "challenge_conflict",
+            "detail": "Critic challenged CONF-02: REJECTED PROVISIONAL PROPOSAL FOR PO-8841: (1) Unverified Quarantine Lot LOT-992",
+            "timestamp_utc": "2026-10-23T07:53:02.261726+00:00"
+          },
+          {
+            "version": 9,
+            "agent": "Zetaris Reconciler Agent (Round 2)",
+            "action": "record_fact",
+            "detail": "[zetaris_qms.incident_tickets#QMS-419] PO-8841.qms_lab_verdict_and_dispute = {'ticket_id': 'QMS-419', 'severity': 'SEV-1_CRITICAL', 'defect_rate_pct': 18.4, 'failure_mode': 'Substrate solder-void micro-cracking under thermal cycling', 'sublot_breakdown': 'Sub-lot 992A-1 (350 units) passed X-ray at 0.0% void; Sub-lot 992A-2 (800 units) failed at 18.4% void rate', 'supplier_dispute_claim': 'Apex Wafer Corp claims all 1150 air-shipped units passed outgoing AOI, blaming carrier shock', 'lab_verdict': 'Scanning acoustic microscopy confirms furnace profile drift at Apex Fab #2 on Sub-lot 992A-2; Sub-lot 992A-1 is safe to release', 'inspector_action_required': 'Reject 800 units in 992A-2; release 350 units in 992A-1; source 2850 deficit from qualified backup'}",
+            "timestamp_utc": "2026-10-23T07:53:02.261799+00:00"
+          },
+          {
+            "version": 10,
+            "agent": "Zetaris Reconciler Agent (Round 2)",
+            "action": "record_fact",
+            "detail": "[zetaris_erp.qualified_suppliers#SIC-MOD-1200V] PO-8841.qualified_backup_suppliers = [{'supplier_id': 'SUP-108', 'supplier_name': 'Silicore Dresden GmbH', 'sku': 'SIC-MOD-1200V', 'qualified_status': 'QUALIFIED_BACKUP', 'max_weekly_capacity': 2400, 'expedite_lead_days': 2, 'expedite_unit_cost_usd': 49.5, 'historical_defect_rate_pct': 0.4, 'region': 'Germany', 'compliance_tier': 'TIER_1_PREFERRED'}, {'supplier_id': 'SUP-115', 'supplier_name': 'Pacific Semi Foundry', 'sku': 'SIC-MOD-1200V', 'qualified_status': 'QUALIFIED_BACKUP', 'max_weekly_capacity': 1500, 'expedite_lead_days': 3, 'expedite_unit_cost_usd': 46.8, 'historical_defect_rate_pct': 1.9, 'region': 'South Korea', 'compliance_tier': 'TIER_1_PREFERRED'}]",
+            "timestamp_utc": "2026-10-23T07:53:02.261805+00:00"
+          },
+          {
+            "version": 11,
+            "agent": "Zetaris Reconciler Agent (Round 2)",
+            "action": "flag_conflict",
+            "detail": "Conflict on PO-8841 (Supplier Quality Dispute vs Lab Telemetry): Vendor Claim (Apex Wafer Corp) vs zetaris_qms.incident_tickets#QMS-419",
+            "timestamp_utc": "2026-10-23T07:53:02.261807+00:00"
+          },
+          {
+            "version": 12,
+            "agent": "Zetaris Reconciler Agent (Round 2)",
+            "action": "resolve_conflict",
+            "detail": "Resolved CONF-01 in favor of zetaris_wms.inventory_ledger#WMS-701",
+            "timestamp_utc": "2026-10-23T07:53:02.261811+00:00"
+          },
+          {
+            "version": 13,
+            "agent": "Zetaris Reconciler Agent (Round 2)",
+            "action": "resolve_conflict",
+            "detail": "Resolved CONF-02 in favor of zetaris_rest.carrier_port_feeds#CAR-901",
+            "timestamp_utc": "2026-10-23T07:53:02.261813+00:00"
+          },
+          {
+            "version": 14,
+            "agent": "Zetaris Reconciler Agent (Round 2)",
+            "action": "resolve_conflict",
+            "detail": "Resolved CONF-03 in favor of zetaris_qms.incident_tickets#QMS-419",
+            "timestamp_utc": "2026-10-23T07:53:02.261815+00:00"
+          },
+          {
+            "version": 15,
+            "agent": "Risk & Policy Escalation Agent",
+            "action": "record_fact",
+            "detail": "[switchyard.risk_calculator#RISK-PO-8841] PO-8841.deterministic_remediation_math = {'po_number': 'PO-8841', 'sku': 'SIC-MOD-1200V', 'production_line': 'Line-B Inverter', 'ordered_qty': 4000, 'effective_usable_qty': 350, 'rejected_quarantine_qty': 800, 'in_transit_deficit_qty': 2850, 'total_shortfall_units': 3650, 'hourly_line_burn_rate': 32, 'effective_runway_hours': 10.9, 'carrier_delay_hours': 96, 'unmitigated_downtime_hours': 85.1, 'downtime_cost_per_hour_usd': 64000, 'unmitigated_downtime_loss_usd': 5446400, 'expedite_premium_usd': 24000.0, 'total_replacement_spend_usd': 177300.0, 'net_loss_avoided_usd': 5422400, 'backup_allocations': [{'supplier_id': 'SUP-108', 'supplier_name': 'Silicore Dresden GmbH', 'region': 'Germany', 'allocated_units': 2400, 'expedite_lead_days': 2, 'unit_cost_usd': 49.5, 'total_spend_usd': 118800.0, 'expedite_premium_usd': 18000.0}, {'supplier_id': 'SUP-115', 'supplier_name': 'Pacific Semi Foundry', 'region': 'South Korea', 'allocated_units': 1250, 'expedite_lead_days': 3, 'unit_cost_usd': 46.8, 'total_spend_usd': 58500.0, 'expedite_premium_usd': 6000.0}], 'critic_final_verdict': 'APPROVED_WITH_PROVENANCE'}",
+            "timestamp_utc": "2026-10-23T07:53:02.261876+00:00"
+          }
+        ]
+      },
+      "markovian": {
+        "steps_completed": 6,
+        "max_capsule_budget_tokens": 420,
+        "naive_total_tokens_across_steps": 7612,
+        "markovian_total_tokens_across_steps": 1216,
+        "total_tokens_saved": 6396,
+        "compression_ratio_pct": 84.0,
+        "capsules": [
+          {
+            "step_index": 1,
+            "step_name": "Step 1: Planner & Source Mapper",
+            "agent_name": "Planner & Source Mapper Agent",
+            "state_hash": "5316a784ed45",
+            "verified_fact_summaries": [
+              "Target PO=PO-8841, SKU=SIC-MOD-1200V, Line=Line-B Inverter, Risk=CRITICAL (95/100)",
+              "Recalled 2 H-MEM precedent(s): HMEM-PREC-001, HMEM-PREC-002"
+            ],
+            "active_conflicts": [],
+            "open_directives": [
+              "Query zetaris_erp.purchase_orders, zetaris_wms.inventory_ledger, and zetaris_rest.carrier_port_feeds for PO-8841"
+            ],
+            "raw_turn_tokens": 291,
+            "naive_cumulative_tokens": 291,
+            "bounded_capsule_tokens": 107,
+            "tokens_saved": 184
+          },
+          {
+            "step_index": 2,
+            "step_name": "Step 2: Reconciler Round 1",
+            "agent_name": "Zetaris Reconciler Agent",
+            "state_hash": "ac673deda262",
+            "verified_fact_summaries": [
+              "[zetaris_erp.purchase_orders#PO-8841] ordered=4000, status=SHIPPED_ON_TIME, supplier=SUP-101 (Apex Wafer Corp)",
+              "[zetaris_wms.inventory_ledger#WMS-701] usable=350, quarantined=800 (lot LOT-992A), deficit=2850, runway=35.9h",
+              "[zetaris_rest.carrier_port_feeds#CAR-901] status=CUSTOMS_HOLD_ORIGIN, delay=+96h"
+            ],
+            "active_conflicts": [
+              "CONF-01: ERP (SHIPPED_ON_TIME) vs WMS (usable=350, quarantined=800)",
+              "CONF-02: ERP ETA (2026-10-25) vs Carrier (+96h delay)"
+            ],
+            "open_directives": [
+              "Submit Round 1 findings to Adversarial Conflict Critic for evidence audit"
+            ],
+            "raw_turn_tokens": 524,
+            "naive_cumulative_tokens": 815,
+            "bounded_capsule_tokens": 169,
+            "tokens_saved": 646
+          },
+          {
+            "step_index": 3,
+            "step_name": "Step 3: Critic Round 1 Revision Loop",
+            "agent_name": "Conflict & Evidence Critic Agent",
+            "state_hash": "bc7094b5eff7",
+            "verified_fact_summaries": [
+              "[zetaris_erp.purchase_orders#PO-8841] ordered=4000, status=SHIPPED_ON_TIME, supplier=SUP-101 (Apex Wafer Corp)",
+              "[zetaris_wms.inventory_ledger#WMS-701] usable=350, quarantined=800 (lot LOT-992A), deficit=2850, runway=35.9h",
+              "[zetaris_rest.carrier_port_feeds#CAR-901] status=CUSTOMS_HOLD_ORIGIN, delay=+96h"
+            ],
+            "active_conflicts": [
+              "CONF-01 [CHALLENGED_BY_CRITIC]: Missing QMS lab verdict on lot LOT-992A",
+              "CONF-02 [CHALLENGED_BY_CRITIC]: Missing qualified backup supplier query for SIC-MOD-1200V"
+            ],
+            "open_directives": [
+              "Execute Round 2 SQL on zetaris_qms.incident_tickets for PO-8841",
+              "Execute Round 2 SQL on zetaris_erp.qualified_suppliers for SIC-MOD-1200V"
+            ],
+            "raw_turn_tokens": 163,
+            "naive_cumulative_tokens": 978,
+            "bounded_capsule_tokens": 196,
+            "tokens_saved": 782
+          },
+          {
+            "step_index": 4,
+            "step_name": "Step 4: Reconciler Round 2 Resolution",
+            "agent_name": "Zetaris Reconciler Agent (Round 2)",
+            "state_hash": "481c4e9fdcd1",
+            "verified_fact_summaries": [
+              "[zetaris_erp.purchase_orders#PO-8841] ordered=4000, status=SHIPPED_ON_TIME, supplier=SUP-101 (Apex Wafer Corp)",
+              "[zetaris_wms.inventory_ledger#WMS-701] usable=350, quarantined=800 (lot LOT-992A), deficit=2850, runway=35.9h",
+              "[zetaris_rest.carrier_port_feeds#CAR-901] status=CUSTOMS_HOLD_ORIGIN, delay=+96h",
+              "[zetaris_qms.incident_tickets#QMS-419] Sub-lot 992A-1 (350 units) passed X-ray at 0.0% void; Sub-lot 992A-2 (800 units) failed at 18.4% void rate | Verdict: Scanning acoustic micro",
+              "[zetaris_erp.qualified_suppliers#SIC-MOD-1200V] 2 backup vendor(s) available",
+              "All 3 conflicts (CONF-01, CONF-02, CONF-03) RESOLVED with multi-source corroboration"
+            ],
+            "active_conflicts": [],
+            "open_directives": [
+              "Escalate to Risk & Policy Escalation Agent for line-stop and split-order sizing"
+            ],
+            "raw_turn_tokens": 514,
+            "naive_cumulative_tokens": 1492,
+            "bounded_capsule_tokens": 227,
+            "tokens_saved": 1265
+          },
+          {
+            "step_index": 5,
+            "step_name": "Step 5: Risk Escalation & Final Audit",
+            "agent_name": "Risk & Policy Escalation Agent",
+            "state_hash": "9a19ed0505ce",
+            "verified_fact_summaries": [
+              "[zetaris_erp.purchase_orders#PO-8841] ordered=4000, status=SHIPPED_ON_TIME, supplier=SUP-101 (Apex Wafer Corp)",
+              "[zetaris_wms.inventory_ledger#WMS-701] usable=350, quarantined=800 (lot LOT-992A), deficit=2850, runway=35.9h",
+              "[zetaris_rest.carrier_port_feeds#CAR-901] status=CUSTOMS_HOLD_ORIGIN, delay=+96h",
+              "[zetaris_qms.incident_tickets#QMS-419] Sub-lot 992A-1 (350 units) passed X-ray at 0.0% void; Sub-lot 992A-2 (800 units) failed at 18.4% void rate | Verdict: Scanning acoustic micro",
+              "[zetaris_erp.qualified_suppliers#SIC-MOD-1200V] 2 backup vendor(s) available",
+              "All 3 conflicts (CONF-01, CONF-02, CONF-03) RESOLVED with multi-source corroboration",
+              "[switchyard.risk_calculator#RISK-PO-8841] Shortfall=3650 units, Unmitigated Loss=$5,446,400, Expedite Premium=$24,000.00, Net Saved=$5,422,400",
+              "Critic Sign-Off: APPROVED_WITH_PROVENANCE"
+            ],
+            "active_conflicts": [],
+            "open_directives": [
+              "Generate final Sourced Remediation Order and commit precedent to H-MEM"
+            ],
+            "raw_turn_tokens": 185,
+            "naive_cumulative_tokens": 1677,
+            "bounded_capsule_tokens": 273,
+            "tokens_saved": 1404
+          },
+          {
+            "step_index": 6,
+            "step_name": "Step 6: Final Sourced Report",
+            "agent_name": "Sourced Decision Reporter Agent",
+            "state_hash": "90ff3c2e4cb7",
+            "verified_fact_summaries": [
+              "[zetaris_wms.inventory_ledger#WMS-701] usable=350, quarantined=800 (lot LOT-992A), deficit=2850, runway=35.9h",
+              "[zetaris_rest.carrier_port_feeds#CAR-901] status=CUSTOMS_HOLD_ORIGIN, delay=+96h",
+              "[zetaris_qms.incident_tickets#QMS-419] Sub-lot 992A-1 (350 units) passed X-ray at 0.0% void; Sub-lot 992A-2 (800 units) failed at 18.4% void rate | Verdict: Scanning acoustic micro",
+              "[zetaris_erp.qualified_suppliers#SIC-MOD-1200V] 2 backup vendor(s) available",
+              "All 3 conflicts (CONF-01, CONF-02, CONF-03) RESOLVED with multi-source corroboration",
+              "[switchyard.risk_calculator#RISK-PO-8841] Shortfall=3650 units, Unmitigated Loss=$5,446,400, Expedite Premium=$24,000.00, Net Saved=$5,422,400",
+              "Critic Sign-Off: APPROVED_WITH_PROVENANCE",
+              "Committed cross-session precedent HMEM-PREC-004 to Meterless H-MEM"
+            ],
+            "active_conflicts": [],
+            "open_directives": [],
+            "raw_turn_tokens": 682,
+            "naive_cumulative_tokens": 2359,
+            "bounded_capsule_tokens": 244,
+            "tokens_saved": 2115
+          }
+        ]
+      },
+      "h_mem": {
+        "recalled_before_run": [
+          {
+            "memory_id": "HMEM-PREC-001",
+            "tier": "PRECEDENT",
+            "supplier_id": "SUP-101",
+            "supplier_name": "Apex Wafer Corp",
+            "sku_family": "SIC-MOD",
+            "session_date": "2026-09-14",
+            "incident_summary": "Prior Q3 lot LOT-840A from Apex Fab #2 exhibited 15.2% solder-void failure while ERP showed SHIPPED_ON_TIME.",
+            "learned_rule": "Never trust Apex Wafer Corp EDI ASN status alone when a split air/ocean shipment occurs; always cross-verify WMS physical receipt and split sub-lot X-ray acoustic logs before rejecting the entire lot.",
+            "provenance": "Historical Ticket QMS-308 + WMS Audit 2026-Q3",
+            "approved_by": "VP Operations"
+          },
+          {
+            "memory_id": "HMEM-PREC-002",
+            "tier": "PRECEDENT",
+            "supplier_id": "SUP-108",
+            "supplier_name": "Silicore Dresden GmbH",
+            "sku_family": "SIC-MOD-1200V",
+            "session_date": "2026-09-29",
+            "incident_summary": "Emergency 48-hour air charter from Silicore Dresden covered 2,000-unit SiC module deficit on Line-B with 0.0% incoming rejection.",
+            "learned_rule": "When Line-B runway drops below 40 hours on SIC-MOD-1200V, split emergency allocation between Silicore Dresden (up to 2,400 units, 2-day air lead) and Pacific Semi Foundry (overflow) to prevent $64,000/hr line-stop.",
+            "provenance": "CAPA-2026-112",
+            "approved_by": "Supply Chain Risk Committee"
+          }
+        ],
+        "committed_after_run": {
+          "memory_id": "HMEM-PREC-004",
+          "tier": "PRECEDENT",
+          "supplier_id": "SUP-101",
+          "supplier_name": "Apex Wafer Corp",
+          "sku_family": "SIC-MOD-1200V",
+          "session_date": "2026-10-23",
+          "incident_summary": "PO-8841 (SIC-MOD-1200V): ERP showed SHIPPED_ON_TIME (4000 units), but Zetaris cross-source audit revealed 350 unrestricted in WMS, 800 in QMS (QMS-419), and +96h carrier alert (CAR-901).",
+          "learned_rule": "For Apex Wafer Corp (SIC-MOD-1200V), enforce Reject 800 units in 992A-2; release 350 units in 992A-1; source 2850 deficit from qualified backup and bridge 3650-unit shortfall via Silicore Dresden GmbH (2400u), Pacific Semi Foundry (1250u) to protect Line-B Inverter ($5,422,400 net loss avoided).",
+          "provenance": "Switchyard Run RUN-20261023-075302-091188 (QMS-419, WMS-701, CAR-901)",
+          "approved_by": "Switchyard Autonomous Auditor"
+        },
+        "store_summary": {
+          "total_memories": 4,
+          "by_tier": {
+            "EPISODIC": 0,
+            "SEMANTIC": 1,
+            "PRECEDENT": 3
+          },
+          "records": [
+            {
+              "memory_id": "HMEM-PREC-001",
+              "tier": "PRECEDENT",
+              "supplier_id": "SUP-101",
+              "supplier_name": "Apex Wafer Corp",
+              "sku_family": "SIC-MOD",
+              "session_date": "2026-09-14",
+              "incident_summary": "Prior Q3 lot LOT-840A from Apex Fab #2 exhibited 15.2% solder-void failure while ERP showed SHIPPED_ON_TIME.",
+              "learned_rule": "Never trust Apex Wafer Corp EDI ASN status alone when a split air/ocean shipment occurs; always cross-verify WMS physical receipt and split sub-lot X-ray acoustic logs before rejecting the entire lot.",
+              "provenance": "Historical Ticket QMS-308 + WMS Audit 2026-Q3",
+              "approved_by": "VP Operations"
+            },
+            {
+              "memory_id": "HMEM-PREC-002",
+              "tier": "PRECEDENT",
+              "supplier_id": "SUP-108",
+              "supplier_name": "Silicore Dresden GmbH",
+              "sku_family": "SIC-MOD-1200V",
+              "session_date": "2026-09-29",
+              "incident_summary": "Emergency 48-hour air charter from Silicore Dresden covered 2,000-unit SiC module deficit on Line-B with 0.0% incoming rejection.",
+              "learned_rule": "When Line-B runway drops below 40 hours on SIC-MOD-1200V, split emergency allocation between Silicore Dresden (up to 2,400 units, 2-day air lead) and Pacific Semi Foundry (overflow) to prevent $64,000/hr line-stop.",
+              "provenance": "CAPA-2026-112",
+              "approved_by": "Supply Chain Risk Committee"
+            },
+            {
+              "memory_id": "HMEM-PREC-003",
+              "tier": "SEMANTIC",
+              "supplier_id": "SUP-204",
+              "supplier_name": "voltGrid Energy Ltd",
+              "sku_family": "LFP-CELL-280AH",
+              "session_date": "2026-10-04",
+              "incident_summary": "LFP prismatic cells exposed to >40C for >6 hours showed >5% DCIR increase and failed automotive cycle warranty.",
+              "learned_rule": "Any LFP-CELL-280AH pallet with transit logger temperature >40C AND DCIR rise >5% must be blocked from EV Line-A and reallocated to stationary BESS grade.",
+              "provenance": "Battery Engineering Spec BES-402",
+              "approved_by": "Chief Battery Engineer"
+            },
+            {
+              "memory_id": "HMEM-PREC-004",
+              "tier": "PRECEDENT",
+              "supplier_id": "SUP-101",
+              "supplier_name": "Apex Wafer Corp",
+              "sku_family": "SIC-MOD-1200V",
+              "session_date": "2026-10-23",
+              "incident_summary": "PO-8841 (SIC-MOD-1200V): ERP showed SHIPPED_ON_TIME (4000 units), but Zetaris cross-source audit revealed 350 unrestricted in WMS, 800 in QMS (QMS-419), and +96h carrier alert (CAR-901).",
+              "learned_rule": "For Apex Wafer Corp (SIC-MOD-1200V), enforce Reject 800 units in 992A-2; release 350 units in 992A-1; source 2850 deficit from qualified backup and bridge 3650-unit shortfall via Silicore Dresden GmbH (2400u), Pacific Semi Foundry (1250u) to protect Line-B Inverter ($5,422,400 net loss avoided).",
+              "provenance": "Switchyard Run RUN-20261023-075302-091188 (QMS-419, WMS-701, CAR-901)",
+              "approved_by": "Switchyard Autonomous Auditor"
+            }
+          ]
+        }
+      }
+    },
+    "meterless_nightshift_and_nvidia_nemotron": {
+      "primary_provider": "Meterless Nightshift Runtime",
+      "runtime_endpoint": "http://127.0.0.1:8088/v1",
+      "lane_1_fast_model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+      "lane_2_deep_model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+      "total_nemotron_calls": 6,
+      "models_used_summary": {
+        "nvidia/nemotron-3.5-lightning-30b-a3b": 3,
+        "nvidia/nemotron-3.5-super-vl-120b-a12b": 3
+      },
+      "model_receipts": [
+        {
+          "receipt_id": "NS-RCPT-001-96b61b",
+          "step_name": "Step 1: Intent Routing & Source Mapping",
+          "agent_name": "Planner & Source Mapper Agent",
+          "lane": "Lane 1: Fast Worker",
+          "requested_model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+          "model_handled_by": "nvidia/nemotron-3.5-lightning-30b-a3b",
+          "provider": "meterless-nightshift (NVIDIA)",
+          "endpoint": "http://127.0.0.1:8088/v1/chat/completions",
+          "execution_mode": "nightshift-sample-fallback",
+          "latency_ms": 18.4,
+          "prompt_tokens": 404,
+          "completion_tokens": 291,
+          "headers_verified": {
+            "Authorization": "Bearer <redacted-nightshift-runtime-token>",
+            "Content-Type": "application/json",
+            "meterless-app": "switchyard-agent",
+            "meterless-scope": "user"
+          }
+        },
+        {
+          "receipt_id": "NS-RCPT-002-85bac9",
+          "step_name": "Step 2: Round 1 Zetaris SQL Discovery",
+          "agent_name": "Zetaris Reconciler Agent",
+          "lane": "Lane 1: Fast Worker",
+          "requested_model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+          "model_handled_by": "nvidia/nemotron-3.5-lightning-30b-a3b",
+          "provider": "meterless-nightshift (NVIDIA)",
+          "endpoint": "http://127.0.0.1:8088/v1/chat/completions",
+          "execution_mode": "nightshift-sample-fallback",
+          "latency_ms": 18.4,
+          "prompt_tokens": 527,
+          "completion_tokens": 158,
+          "headers_verified": {
+            "Authorization": "Bearer <redacted-nightshift-runtime-token>",
+            "Content-Type": "application/json",
+            "meterless-app": "switchyard-agent",
+            "meterless-scope": "user"
+          }
+        },
+        {
+          "receipt_id": "NS-RCPT-003-9e52f7",
+          "step_name": "Step 3: Adversarial Critique & Revision Request",
+          "agent_name": "Conflict & Evidence Critic Agent",
+          "lane": "Lane 2: Deep Worker",
+          "requested_model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+          "model_handled_by": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+          "provider": "meterless-nightshift (NVIDIA)",
+          "endpoint": "http://127.0.0.1:8088/v1/chat/completions",
+          "execution_mode": "nightshift-sample-fallback",
+          "latency_ms": 18.4,
+          "prompt_tokens": 397,
+          "completion_tokens": 162,
+          "headers_verified": {
+            "Authorization": "Bearer <redacted-nightshift-runtime-token>",
+            "Content-Type": "application/json",
+            "meterless-app": "switchyard-agent",
+            "meterless-scope": "user"
+          }
+        },
+        {
+          "receipt_id": "NS-RCPT-004-eb0e22",
+          "step_name": "Step 4: Round 2 Targeted SQL & Conflict Resolution",
+          "agent_name": "Zetaris Reconciler Agent (Round 2)",
+          "lane": "Lane 1: Fast Worker",
+          "requested_model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+          "model_handled_by": "nvidia/nemotron-3.5-lightning-30b-a3b",
+          "provider": "meterless-nightshift (NVIDIA)",
+          "endpoint": "http://127.0.0.1:8088/v1/chat/completions",
+          "execution_mode": "nightshift-sample-fallback",
+          "latency_ms": 18.4,
+          "prompt_tokens": 603,
+          "completion_tokens": 151,
+          "headers_verified": {
+            "Authorization": "Bearer <redacted-nightshift-runtime-token>",
+            "Content-Type": "application/json",
+            "meterless-app": "switchyard-agent",
+            "meterless-scope": "user"
+          }
+        },
+        {
+          "receipt_id": "NS-RCPT-005-26543f",
+          "step_name": "Step 5: Risk Escalation & Critic Sign-Off",
+          "agent_name": "Risk & Policy Escalation Agent",
+          "lane": "Lane 2: Deep Worker",
+          "requested_model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+          "model_handled_by": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+          "provider": "meterless-nightshift (NVIDIA)",
+          "endpoint": "http://127.0.0.1:8088/v1/chat/completions",
+          "execution_mode": "nightshift-sample-fallback",
+          "latency_ms": 18.41,
+          "prompt_tokens": 556,
+          "completion_tokens": 184,
+          "headers_verified": {
+            "Authorization": "Bearer <redacted-nightshift-runtime-token>",
+            "Content-Type": "application/json",
+            "meterless-app": "switchyard-agent",
+            "meterless-scope": "user"
+          }
+        },
+        {
+          "receipt_id": "NS-RCPT-006-bf6904",
+          "step_name": "Step 6: Sourced Remediation Report Synthesis",
+          "agent_name": "Sourced Decision Reporter Agent",
+          "lane": "Lane 2: Deep Worker",
+          "requested_model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+          "model_handled_by": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+          "provider": "meterless-nightshift (NVIDIA)",
+          "endpoint": "http://127.0.0.1:8088/v1/chat/completions",
+          "execution_mode": "nightshift-sample-fallback",
+          "latency_ms": 18.41,
+          "prompt_tokens": 615,
+          "completion_tokens": 681,
+          "headers_verified": {
+            "Authorization": "Bearer <redacted-nightshift-runtime-token>",
+            "Content-Type": "application/json",
+            "meterless-app": "switchyard-agent",
+            "meterless-scope": "user"
+          }
+        }
+      ]
+    }
+  },
+  "agent_collaboration_trace": [
+    {
+      "step": 1,
+      "agent": "Planner & Source Mapper Agent",
+      "role": "Decomposes operator query via Scout Intent, recalls H-MEM precedents, and delegates Zetaris SQL discovery.",
+      "engines_used": [
+        "Scout Intent",
+        "H-MEM",
+        "World Model",
+        "Markovian"
+      ],
+      "sql_executed": [],
+      "output_summary": "PLANNER & SOURCE MAPPER DELEGATION (PO-8841 / SIC-MOD-1200V):\n1. Intent Classification: multi_source_disruption_reconciliation | Risk: CRITICAL (95/100)\n2. H-MEM Recalled Precedents (2 active):\n- [HMEM-PREC-001 | PRECEDENT] (Apex Wafer Corp, SIC-MOD): Never trust Apex Wafer Corp EDI ASN status alone when a split air/ocean shipment occurs; always cross-verify WMS physical receipt and split sub-lot X-ray acoustic logs before rejecting the entire lot.\n- [HMEM-PREC-002 | PRECEDENT] (Silicore Dresden GmbH, SIC-MOD-1200V): When Line-B runway drops below 40 hours on SIC-MOD-1200V, split emergency allocation between Silicore Dresden (up to 2,400 units, 2-day air lead) and Pacific Semi Foundry (overflow) to prevent $64,000/hr line-stop.\n3. Delegated Subtasks to Zetaris Reconciler Agent:\n   - Query zetaris_erp.purchase_orders for PO-8841 vendor promise and ordered quantity.\n   - Query zetaris_wms.inventory_ledger for PO-8841 physical dock count, quarantine status, and line runway.\n   - Query zetaris_rest.carrier_port_feeds for PO-8841 live customs/vessel/reefer telemetry.\n   - Record all facts into Meterless World Model and flag cross-source disagreements.",
+      "model_receipt": {
+        "receipt_id": "NS-RCPT-001-96b61b",
+        "step_name": "Step 1: Intent Routing & Source Mapping",
+        "agent_name": "Planner & Source Mapper Agent",
+        "lane": "Lane 1: Fast Worker",
+        "requested_model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+        "model_handled_by": "nvidia/nemotron-3.5-lightning-30b-a3b",
+        "provider": "meterless-nightshift (NVIDIA)",
+        "endpoint": "http://127.0.0.1:8088/v1/chat/completions",
+        "execution_mode": "nightshift-sample-fallback",
+        "latency_ms": 18.4,
+        "prompt_tokens": 404,
+        "completion_tokens": 291,
+        "headers_verified": {
+          "Authorization": "Bearer <redacted-nightshift-runtime-token>",
+          "Content-Type": "application/json",
+          "meterless-app": "switchyard-agent",
+          "meterless-scope": "user"
+        }
+      },
+      "markovian_capsule": {
+        "step_index": 1,
+        "step_name": "Step 1: Planner & Source Mapper",
+        "agent_name": "Planner & Source Mapper Agent",
+        "state_hash": "5316a784ed45",
+        "verified_fact_summaries": [
+          "Target PO=PO-8841, SKU=SIC-MOD-1200V, Line=Line-B Inverter, Risk=CRITICAL (95/100)",
+          "Recalled 2 H-MEM precedent(s): HMEM-PREC-001, HMEM-PREC-002"
+        ],
+        "active_conflicts": [],
+        "open_directives": [
+          "Query zetaris_erp.purchase_orders, zetaris_wms.inventory_ledger, and zetaris_rest.carrier_port_feeds for PO-8841"
+        ],
+        "raw_turn_tokens": 291,
+        "naive_cumulative_tokens": 291,
+        "bounded_capsule_tokens": 107,
+        "tokens_saved": 184
+      }
+    },
+    {
+      "step": 2,
+      "agent": "Zetaris Reconciler Agent (Round 1)",
+      "role": "Queries ERP, WMS, and Carrier REST tables in Zetaris and records initial conflicts in World Model.",
+      "engines_used": [
+        "World Model",
+        "Markovian"
+      ],
+      "sql_executed": [
+        {
+          "query_id": "e1794f0c-2bc7-479d-864a-c7b8cb695bf5",
+          "request_id": "ead0326a-bef4-4f6d-b5af-2eaf76364291",
+          "sql": "SELECT * FROM zetaris_erp.purchase_orders WHERE po_number = 'PO-8841'",
+          "source_tables_touched": [
+            "zetaris_erp.purchase_orders"
+          ],
+          "execution_mode": "zetaris-virtualized-sample",
+          "row_count": 1,
+          "latency_ms": 0.02,
+          "columns": [
+            "po_number",
+            "sku",
+            "part_name",
+            "production_line",
+            "supplier_id",
+            "supplier_name",
+            "ordered_qty",
+            "unit_cost_usd",
+            "erp_status",
+            "promised_eta",
+            "incoterms",
+            "buyer_notes"
+          ],
+          "rows": [
+            {
+              "po_number": "PO-8841",
+              "sku": "SIC-MOD-1200V",
+              "part_name": "1200V SiC Power Module",
+              "production_line": "Line-B Inverter",
+              "supplier_id": "SUP-101",
+              "supplier_name": "Apex Wafer Corp",
+              "ordered_qty": 4000,
+              "unit_cost_usd": 42.0,
+              "erp_status": "SHIPPED_ON_TIME",
+              "promised_eta": "2026-10-25",
+              "incoterms": "CIF_OAKLAND",
+              "buyer_notes": "Vendor portal auto-confirmed full dispatch on 2026-10-19"
+            }
+          ]
+        },
+        {
+          "query_id": "18cb20d3-e1a7-4fa0-8437-133cf158cf1b",
+          "request_id": "c463d9ff-8975-4c6e-9233-102c5ca2b209",
+          "sql": "SELECT * FROM zetaris_wms.inventory_ledger WHERE po_number = 'PO-8841'",
+          "source_tables_touched": [
+            "zetaris_wms.inventory_ledger"
+          ],
+          "execution_mode": "zetaris-virtualized-sample",
+          "row_count": 1,
+          "latency_ms": 0.02,
+          "columns": [
+            "ledger_id",
+            "po_number",
+            "sku",
+            "production_line",
+            "received_qty",
+            "usable_unrestricted_qty",
+            "quarantined_qty",
+            "in_transit_deficit_qty",
+            "lot_code",
+            "dock_location",
+            "hourly_line_burn_rate",
+            "line_runway_hours",
+            "downtime_cost_per_hour_usd",
+            "last_scan_utc",
+            "warehouse_note"
+          ],
+          "rows": [
+            {
+              "ledger_id": "WMS-701",
+              "po_number": "PO-8841",
+              "sku": "SIC-MOD-1200V",
+              "production_line": "Line-B Inverter",
+              "received_qty": 1150,
+              "usable_unrestricted_qty": 350,
+              "quarantined_qty": 800,
+              "in_transit_deficit_qty": 2850,
+              "lot_code": "LOT-992A",
+              "dock_location": "Dock-4 Quarantine Cage",
+              "hourly_line_burn_rate": 32,
+              "line_runway_hours": 35.9,
+              "downtime_cost_per_hour_usd": 64000,
+              "last_scan_utc": "2026-10-23T06:40:00Z",
+              "warehouse_note": "Only partial air-split 1150 units arrived; 800 units in sub-lot 992A-2 locked by QMS hold; remaining 2850 units still on ocean vessel"
+            }
+          ]
+        },
+        {
+          "query_id": "9b4cefc4-118a-4479-9d88-db6001052d61",
+          "request_id": "c7fd13cb-e72e-4a13-b6f3-14a2eee6e0b2",
+          "sql": "SELECT * FROM zetaris_rest.carrier_port_feeds WHERE po_number = 'PO-8841'",
+          "source_tables_touched": [
+            "zetaris_rest.carrier_port_feeds"
+          ],
+          "execution_mode": "zetaris-virtualized-sample",
+          "row_count": 1,
+          "latency_ms": 0.01,
+          "columns": [
+            "feed_id",
+            "po_number",
+            "vessel_or_flight",
+            "origin_port",
+            "destination_port",
+            "carrier_status",
+            "reported_delay_hours",
+            "revised_eta",
+            "units_on_conveyance",
+            "telemetry_alert",
+            "updated_at_utc"
+          ],
+          "rows": [
+            {
+              "feed_id": "CAR-901",
+              "po_number": "PO-8841",
+              "vessel_or_flight": "MV Pacific Horizon / Split Air CX-884",
+              "origin_port": "Kaohsiung, TW",
+              "destination_port": "Oakland, US",
+              "carrier_status": "CUSTOMS_HOLD_ORIGIN",
+              "reported_delay_hours": 96,
+              "revised_eta": "2026-10-29T14:00:00Z",
+              "units_on_conveyance": 2850,
+              "telemetry_alert": "Ocean bill of lading HBL-8841B held for export dual-use power semiconductor inspection; +96h delay confirmed",
+              "updated_at_utc": "2026-10-23T06:55:00Z"
+            }
+          ]
+        }
+      ],
+      "output_summary": "RECONCILER ROUND 1 FINDINGS (PO-8841):\n- Executed 3 federated SQL queries across Zetaris (ERP, WMS, Carrier REST).\n- Detected CONF-01: ERP claims 4000 units 'SHIPPED_ON_TIME', but WMS physical scan [WMS-701] shows only 350 unrestricted units (800 quarantined in lot LOT-992A, 2850 missing/in-transit). Factory runway is 35.9h.\n- Detected CONF-02: Carrier feed [CAR-901] reports 'CUSTOMS_HOLD_ORIGIN' (+96h delay, alert: Ocean bill of lading HBL-8841B held for export dual-use power semiconductor inspection; +96h delay confirmed).\n- Provisional Proposal: Release quarantined lot LOT-992A or wait for primary supplier Apex Wafer Corp.",
+      "model_receipt": {
+        "receipt_id": "NS-RCPT-002-85bac9",
+        "step_name": "Step 2: Round 1 Zetaris SQL Discovery",
+        "agent_name": "Zetaris Reconciler Agent",
+        "lane": "Lane 1: Fast Worker",
+        "requested_model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+        "model_handled_by": "nvidia/nemotron-3.5-lightning-30b-a3b",
+        "provider": "meterless-nightshift (NVIDIA)",
+        "endpoint": "http://127.0.0.1:8088/v1/chat/completions",
+        "execution_mode": "nightshift-sample-fallback",
+        "latency_ms": 18.4,
+        "prompt_tokens": 527,
+        "completion_tokens": 158,
+        "headers_verified": {
+          "Authorization": "Bearer <redacted-nightshift-runtime-token>",
+          "Content-Type": "application/json",
+          "meterless-app": "switchyard-agent",
+          "meterless-scope": "user"
+        }
+      },
+      "markovian_capsule": {
+        "step_index": 2,
+        "step_name": "Step 2: Reconciler Round 1",
+        "agent_name": "Zetaris Reconciler Agent",
+        "state_hash": "ac673deda262",
+        "verified_fact_summaries": [
+          "[zetaris_erp.purchase_orders#PO-8841] ordered=4000, status=SHIPPED_ON_TIME, supplier=SUP-101 (Apex Wafer Corp)",
+          "[zetaris_wms.inventory_ledger#WMS-701] usable=350, quarantined=800 (lot LOT-992A), deficit=2850, runway=35.9h",
+          "[zetaris_rest.carrier_port_feeds#CAR-901] status=CUSTOMS_HOLD_ORIGIN, delay=+96h"
+        ],
+        "active_conflicts": [
+          "CONF-01: ERP (SHIPPED_ON_TIME) vs WMS (usable=350, quarantined=800)",
+          "CONF-02: ERP ETA (2026-10-25) vs Carrier (+96h delay)"
+        ],
+        "open_directives": [
+          "Submit Round 1 findings to Adversarial Conflict Critic for evidence audit"
+        ],
+        "raw_turn_tokens": 524,
+        "naive_cumulative_tokens": 815,
+        "bounded_capsule_tokens": 169,
+        "tokens_saved": 646
+      }
+    },
+    {
+      "step": 3,
+      "agent": "Conflict & Evidence Critic Agent",
+      "role": "Audits Round 1 findings, flags missing QMS lab evidence and unmitigated runway risk, and forces Round 2 SQL re-query.",
+      "engines_used": [
+        "World Model",
+        "Markovian",
+        "H-MEM"
+      ],
+      "sql_executed": [],
+      "output_summary": "CONFLICT & EVIDENCE CRITIC AUDIT (VERDICT: REVISION_REQUIRED):\n- Audited World Model v8 against H-MEM precedents.\n- Challenge 1 [CONF-01]: Cannot release or write off lot LOT-992A (800 quarantined units) without lab evidence from zetaris_qms.incident_tickets.\n- Challenge 2 [CONF-02]: Waiting for primary vendor Apex Wafer Corp violates factory continuity policy (35.9h runway vs +96h delay).\n- Mandatory Round 2 SQL Directives issued to Zetaris Reconciler Agent:\n  1) SELECT * FROM zetaris_qms.incident_tickets WHERE po_number = 'PO-8841'\n  2) SELECT * FROM zetaris_erp.qualified_suppliers WHERE sku = 'SIC-MOD-1200V' ORDER BY expedite_lead_days ASC",
+      "model_receipt": {
+        "receipt_id": "NS-RCPT-003-9e52f7",
+        "step_name": "Step 3: Adversarial Critique & Revision Request",
+        "agent_name": "Conflict & Evidence Critic Agent",
+        "lane": "Lane 2: Deep Worker",
+        "requested_model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+        "model_handled_by": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+        "provider": "meterless-nightshift (NVIDIA)",
+        "endpoint": "http://127.0.0.1:8088/v1/chat/completions",
+        "execution_mode": "nightshift-sample-fallback",
+        "latency_ms": 18.4,
+        "prompt_tokens": 397,
+        "completion_tokens": 162,
+        "headers_verified": {
+          "Authorization": "Bearer <redacted-nightshift-runtime-token>",
+          "Content-Type": "application/json",
+          "meterless-app": "switchyard-agent",
+          "meterless-scope": "user"
+        }
+      },
+      "markovian_capsule": {
+        "step_index": 3,
+        "step_name": "Step 3: Critic Round 1 Revision Loop",
+        "agent_name": "Conflict & Evidence Critic Agent",
+        "state_hash": "bc7094b5eff7",
+        "verified_fact_summaries": [
+          "[zetaris_erp.purchase_orders#PO-8841] ordered=4000, status=SHIPPED_ON_TIME, supplier=SUP-101 (Apex Wafer Corp)",
+          "[zetaris_wms.inventory_ledger#WMS-701] usable=350, quarantined=800 (lot LOT-992A), deficit=2850, runway=35.9h",
+          "[zetaris_rest.carrier_port_feeds#CAR-901] status=CUSTOMS_HOLD_ORIGIN, delay=+96h"
+        ],
+        "active_conflicts": [
+          "CONF-01 [CHALLENGED_BY_CRITIC]: Missing QMS lab verdict on lot LOT-992A",
+          "CONF-02 [CHALLENGED_BY_CRITIC]: Missing qualified backup supplier query for SIC-MOD-1200V"
+        ],
+        "open_directives": [
+          "Execute Round 2 SQL on zetaris_qms.incident_tickets for PO-8841",
+          "Execute Round 2 SQL on zetaris_erp.qualified_suppliers for SIC-MOD-1200V"
+        ],
+        "raw_turn_tokens": 163,
+        "naive_cumulative_tokens": 978,
+        "bounded_capsule_tokens": 196,
+        "tokens_saved": 782
+      }
+    },
+    {
+      "step": 4,
+      "agent": "Zetaris Reconciler Agent (Round 2)",
+      "role": "Executes Critic's SQL directives on QMS tickets and backup suppliers, resolving all 3 conflicts in World Model.",
+      "engines_used": [
+        "World Model",
+        "Markovian"
+      ],
+      "sql_executed": [
+        {
+          "query_id": "3d9e20e6-1a72-457e-8582-5402b57b3340",
+          "request_id": "71b00ffe-937e-4ee0-8ff9-cb7c5e0f500f",
+          "sql": "SELECT * FROM zetaris_qms.incident_tickets WHERE po_number = 'PO-8841'",
+          "source_tables_touched": [
+            "zetaris_qms.incident_tickets"
+          ],
+          "execution_mode": "zetaris-virtualized-sample",
+          "row_count": 1,
+          "latency_ms": 0.01,
+          "columns": [
+            "ticket_id",
+            "po_number",
+            "sku",
+            "supplier_id",
+            "lot_code",
+            "severity",
+            "qms_status",
+            "defect_rate_pct",
+            "failure_mode",
+            "sublot_breakdown",
+            "supplier_dispute_claim",
+            "lab_verdict",
+            "inspector_action_required"
+          ],
+          "rows": [
+            {
+              "ticket_id": "QMS-419",
+              "po_number": "PO-8841",
+              "sku": "SIC-MOD-1200V",
+              "supplier_id": "SUP-101",
+              "lot_code": "LOT-992A",
+              "severity": "SEV-1_CRITICAL",
+              "qms_status": "HOLD_ACTIVE",
+              "defect_rate_pct": 18.4,
+              "failure_mode": "Substrate solder-void micro-cracking under thermal cycling",
+              "sublot_breakdown": "Sub-lot 992A-1 (350 units) passed X-ray at 0.0% void; Sub-lot 992A-2 (800 units) failed at 18.4% void rate",
+              "supplier_dispute_claim": "Apex Wafer Corp claims all 1150 air-shipped units passed outgoing AOI, blaming carrier shock",
+              "lab_verdict": "Scanning acoustic microscopy confirms furnace profile drift at Apex Fab #2 on Sub-lot 992A-2; Sub-lot 992A-1 is safe to release",
+              "inspector_action_required": "Reject 800 units in 992A-2; release 350 units in 992A-1; source 2850 deficit from qualified backup"
+            }
+          ]
+        },
+        {
+          "query_id": "0df1e57b-3513-4b59-a798-9ab066648a68",
+          "request_id": "97a69b53-1b5f-463d-b381-22ebb0f79b2c",
+          "sql": "SELECT * FROM zetaris_erp.qualified_suppliers WHERE sku = 'SIC-MOD-1200V' ORDER BY expedite_lead_days ASC",
+          "source_tables_touched": [
+            "zetaris_erp.qualified_suppliers"
+          ],
+          "execution_mode": "zetaris-virtualized-sample",
+          "row_count": 3,
+          "latency_ms": 0.02,
+          "columns": [
+            "supplier_id",
+            "supplier_name",
+            "sku",
+            "qualified_status",
+            "max_weekly_capacity",
+            "expedite_lead_days",
+            "expedite_unit_cost_usd",
+            "historical_defect_rate_pct",
+            "region",
+            "compliance_tier"
+          ],
+          "rows": [
+            {
+              "supplier_id": "SUP-108",
+              "supplier_name": "Silicore Dresden GmbH",
+              "sku": "SIC-MOD-1200V",
+              "qualified_status": "QUALIFIED_BACKUP",
+              "max_weekly_capacity": 2400,
+              "expedite_lead_days": 2,
+              "expedite_unit_cost_usd": 49.5,
+              "historical_defect_rate_pct": 0.4,
+              "region": "Germany",
+              "compliance_tier": "TIER_1_PREFERRED"
+            },
+            {
+              "supplier_id": "SUP-115",
+              "supplier_name": "Pacific Semi Foundry",
+              "sku": "SIC-MOD-1200V",
+              "qualified_status": "QUALIFIED_BACKUP",
+              "max_weekly_capacity": 1500,
+              "expedite_lead_days": 3,
+              "expedite_unit_cost_usd": 46.8,
+              "historical_defect_rate_pct": 1.9,
+              "region": "South Korea",
+              "compliance_tier": "TIER_1_PREFERRED"
+            },
+            {
+              "supplier_id": "SUP-101",
+              "supplier_name": "Apex Wafer Corp",
+              "sku": "SIC-MOD-1200V",
+              "qualified_status": "PRIMARY_WATCHLIST",
+              "max_weekly_capacity": 5000,
+              "expedite_lead_days": 7,
+              "expedite_unit_cost_usd": 42.0,
+              "historical_defect_rate_pct": 4.8,
+              "region": "Taiwan",
+              "compliance_tier": "TIER_2_CONDITIONAL"
+            }
+          ]
+        }
+      ],
+      "output_summary": "RECONCILER ROUND 2 TARGETED RE-QUERY COMPLETE (PO-8841):\n- Retrieved [QMS-419]: Sub-lot 992A-1 (350 units) passed X-ray at 0.0% void; Sub-lot 992A-2 (800 units) failed at 18.4% void rate. Lab Verdict: Scanning acoustic microscopy confirms furnace profile drift at Apex Fab #2 on Sub-lot 992A-2; Sub-lot 992A-1 is safe to release.\n- Retrieved 2 qualified backup suppliers for SIC-MOD-1200V: Silicore Dresden GmbH (SUP-108: cap=2400, lead=2d @ $49.5), Pacific Semi Foundry (SUP-115: cap=1500, lead=3d @ $46.8).\n- Resolved all 3 cross-system conflicts (CONF-01, CONF-02, CONF-03) in Meterless World Model v14.",
+      "model_receipt": {
+        "receipt_id": "NS-RCPT-004-eb0e22",
+        "step_name": "Step 4: Round 2 Targeted SQL & Conflict Resolution",
+        "agent_name": "Zetaris Reconciler Agent (Round 2)",
+        "lane": "Lane 1: Fast Worker",
+        "requested_model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+        "model_handled_by": "nvidia/nemotron-3.5-lightning-30b-a3b",
+        "provider": "meterless-nightshift (NVIDIA)",
+        "endpoint": "http://127.0.0.1:8088/v1/chat/completions",
+        "execution_mode": "nightshift-sample-fallback",
+        "latency_ms": 18.4,
+        "prompt_tokens": 603,
+        "completion_tokens": 151,
+        "headers_verified": {
+          "Authorization": "Bearer <redacted-nightshift-runtime-token>",
+          "Content-Type": "application/json",
+          "meterless-app": "switchyard-agent",
+          "meterless-scope": "user"
+        }
+      },
+      "markovian_capsule": {
+        "step_index": 4,
+        "step_name": "Step 4: Reconciler Round 2 Resolution",
+        "agent_name": "Zetaris Reconciler Agent (Round 2)",
+        "state_hash": "481c4e9fdcd1",
+        "verified_fact_summaries": [
+          "[zetaris_erp.purchase_orders#PO-8841] ordered=4000, status=SHIPPED_ON_TIME, supplier=SUP-101 (Apex Wafer Corp)",
+          "[zetaris_wms.inventory_ledger#WMS-701] usable=350, quarantined=800 (lot LOT-992A), deficit=2850, runway=35.9h",
+          "[zetaris_rest.carrier_port_feeds#CAR-901] status=CUSTOMS_HOLD_ORIGIN, delay=+96h",
+          "[zetaris_qms.incident_tickets#QMS-419] Sub-lot 992A-1 (350 units) passed X-ray at 0.0% void; Sub-lot 992A-2 (800 units) failed at 18.4% void rate | Verdict: Scanning acoustic micro",
+          "[zetaris_erp.qualified_suppliers#SIC-MOD-1200V] 2 backup vendor(s) available",
+          "All 3 conflicts (CONF-01, CONF-02, CONF-03) RESOLVED with multi-source corroboration"
+        ],
+        "active_conflicts": [],
+        "open_directives": [
+          "Escalate to Risk & Policy Escalation Agent for line-stop and split-order sizing"
+        ],
+        "raw_turn_tokens": 514,
+        "naive_cumulative_tokens": 1492,
+        "bounded_capsule_tokens": 227,
+        "tokens_saved": 1265
+      }
+    },
+    {
+      "step": 5,
+      "agent": "Risk & Policy Escalation Agent",
+      "role": "Computes deterministic factory line-stop exposure and minimum-cost backup supplier split; receives Critic approval.",
+      "engines_used": [
+        "World Model",
+        "Markovian"
+      ],
+      "sql_executed": [],
+      "output_summary": "RISK & POLICY ESCALATION VERIFICATION (PO-8841 on Line-B Inverter):\n- Effective Runway: 350 usable units at 32 units/hr = 10.9h runway.\n- Unmitigated Exposure: 85.1h line-stop x $64,000/hr = $5,446,400 gross loss.\n- Shortfall to Bridge: 3650 units (2850 delayed/missing + 800 rejected in QMS).\n- Optimal Qualified Backup Allocation: 2400 units to Silicore Dresden GmbH [SUP-108] (2d air lead @ $49.50/unit, premium +$18,000.00); 1250 units to Pacific Semi Foundry [SUP-115] (3d air lead @ $46.80/unit, premium +$6,000.00)\n- Financial Net Benefit: Expedite premium of $24,000.00 prevents $5,446,400 line-stop loss (Net savings: $5,422,400).\n- Conflict Critic Sign-Off: APPROVED_WITH_PROVENANCE (3/3 conflicts resolved, 100% claims cited).",
+      "model_receipt": {
+        "receipt_id": "NS-RCPT-005-26543f",
+        "step_name": "Step 5: Risk Escalation & Critic Sign-Off",
+        "agent_name": "Risk & Policy Escalation Agent",
+        "lane": "Lane 2: Deep Worker",
+        "requested_model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+        "model_handled_by": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+        "provider": "meterless-nightshift (NVIDIA)",
+        "endpoint": "http://127.0.0.1:8088/v1/chat/completions",
+        "execution_mode": "nightshift-sample-fallback",
+        "latency_ms": 18.41,
+        "prompt_tokens": 556,
+        "completion_tokens": 184,
+        "headers_verified": {
+          "Authorization": "Bearer <redacted-nightshift-runtime-token>",
+          "Content-Type": "application/json",
+          "meterless-app": "switchyard-agent",
+          "meterless-scope": "user"
+        }
+      },
+      "markovian_capsule": {
+        "step_index": 5,
+        "step_name": "Step 5: Risk Escalation & Final Audit",
+        "agent_name": "Risk & Policy Escalation Agent",
+        "state_hash": "9a19ed0505ce",
+        "verified_fact_summaries": [
+          "[zetaris_erp.purchase_orders#PO-8841] ordered=4000, status=SHIPPED_ON_TIME, supplier=SUP-101 (Apex Wafer Corp)",
+          "[zetaris_wms.inventory_ledger#WMS-701] usable=350, quarantined=800 (lot LOT-992A), deficit=2850, runway=35.9h",
+          "[zetaris_rest.carrier_port_feeds#CAR-901] status=CUSTOMS_HOLD_ORIGIN, delay=+96h",
+          "[zetaris_qms.incident_tickets#QMS-419] Sub-lot 992A-1 (350 units) passed X-ray at 0.0% void; Sub-lot 992A-2 (800 units) failed at 18.4% void rate | Verdict: Scanning acoustic micro",
+          "[zetaris_erp.qualified_suppliers#SIC-MOD-1200V] 2 backup vendor(s) available",
+          "All 3 conflicts (CONF-01, CONF-02, CONF-03) RESOLVED with multi-source corroboration",
+          "[switchyard.risk_calculator#RISK-PO-8841] Shortfall=3650 units, Unmitigated Loss=$5,446,400, Expedite Premium=$24,000.00, Net Saved=$5,422,400",
+          "Critic Sign-Off: APPROVED_WITH_PROVENANCE"
+        ],
+        "active_conflicts": [],
+        "open_directives": [
+          "Generate final Sourced Remediation Order and commit precedent to H-MEM"
+        ],
+        "raw_turn_tokens": 185,
+        "naive_cumulative_tokens": 1677,
+        "bounded_capsule_tokens": 273,
+        "tokens_saved": 1404
+      }
+    },
+    {
+      "step": 6,
+      "agent": "Sourced Decision Reporter Agent",
+      "role": "Synthesizes the final evidence-cited Remediation Order and commits the learned rule to H-MEM.",
+      "engines_used": [
+        "H-MEM",
+        "World Model",
+        "Markovian"
+      ],
+      "sql_executed": [],
+      "output_summary": "### Executive Summary & Sourced Verdict (`PO-8841` / `SIC-MOD-1200V`)\n\n- **Disruption Status:** ERP claims `PO-8841` (**4,000 units** from **Apex Wafer Corp**) is `SHIPPED_ON_TIME` with ETA `2026-10-25` (`[zetaris_erp.purchase_orders#PO-8841]`). Cross-system reconciliation through **Zetaris** proves this status is false.\n- **Physical Reality:** Warehouse dock telemetry (`[zetaris_wms.inventory_ledger#WMS-701]`) shows only **350 unrestricted units** available (35.9h runway on **Line-B Inverter** at 32 units/hr burn rate), **800 units quarantined** in `LOT-992A`, and **2,850 units missing/delayed**.\n- **Transit & Quality Root Cause:** Live carrier telemetry (`[zetaris_rest.carrier_port_feeds#CAR-901]`) confirms `CUSTOMS_HOLD_ORIGIN` (**+96h delay**, revised ETA `2026-10-29T14:00:00Z`: *Ocean bill of lading HBL-8841B held for export dual-use power semiconductor inspection; +96h delay confirmed*). Meanwhile, QMS lab report (`[zetaris_qms.incident_tickets#QMS-419]`) establishes: *Scanning acoustic microscopy confirms furnace profile drift at Apex Fab #2 on Sub-lot 992A-2; Sub-lot 992A-1 is safe to release* (Sub-lot 992A-1 (350 units) passed X-ray at 0.0% void; Sub-lot 992A-2 (800 units) failed at 18.4% void rate).\n\n### Actionable Remediation Order\n\n1. **Dock & Quarantine Disposition (`[zetaris_qms.incident_tickets#QMS-419]`):** Reject 800 units in 992A-2; release 350 units in 992A-1; source 2850 deficit from qualified backup.\n2. **Supply Continuity & Backup Allocation (`3,650 unit shortfall`):**\n  - **Issue Emergency Split PO to Silicore Dresden GmbH (`[zetaris_erp.qualified_suppliers#SUP-108]`):** Order **2,400 units** of `SIC-MOD-1200V` at **$49.50/unit** (2-day air lead time, total spend **$118,800.00**, expedite premium **+$18,000.00**).\n  - **Issue Emergency Split PO to Pacific Semi Foundry (`[zetaris_erp.qualified_suppliers#SUP-115]`):** Order **1,250 units** of `SIC-MOD-1200V` at **$46.80/unit** (3-day air lead time, total spend **$58,500.00**, expedite premium **+$6,000.00**).\n3. **Financial & Runway Protection (`[switchyard.risk_calculator#RISK-PO-8841]`):** Prevents **85.1 hours** of downtime on **Line-B Inverter** (**$5,446,400** gross loss avoided for **$24,000.00** expedite premium; **net savings: $5,422,400**).\n4. **Cross-Session Memory (`[H-MEM#HMEM-PREC-004]`):** Precedent committed to Meterless H-MEM for future sessions involving `Apex Wafer Corp`.\n\n### Confidence & Limitations\n- **Confidence Score:** `0.96` (3/3 cross-source conflicts resolved with 3-way corroboration across Zetaris ERP, WMS, QMS, and Carrier REST tables).\n- **Known Limitations:** Backup allocation lead times assume immediate customs release on air-charter lanes and standard incoming lot acceptance.",
+      "model_receipt": {
+        "receipt_id": "NS-RCPT-006-bf6904",
+        "step_name": "Step 6: Sourced Remediation Report Synthesis",
+        "agent_name": "Sourced Decision Reporter Agent",
+        "lane": "Lane 2: Deep Worker",
+        "requested_model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+        "model_handled_by": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+        "provider": "meterless-nightshift (NVIDIA)",
+        "endpoint": "http://127.0.0.1:8088/v1/chat/completions",
+        "execution_mode": "nightshift-sample-fallback",
+        "latency_ms": 18.41,
+        "prompt_tokens": 615,
+        "completion_tokens": 681,
+        "headers_verified": {
+          "Authorization": "Bearer <redacted-nightshift-runtime-token>",
+          "Content-Type": "application/json",
+          "meterless-app": "switchyard-agent",
+          "meterless-scope": "user"
+        }
+      },
+      "markovian_capsule": {
+        "step_index": 6,
+        "step_name": "Step 6: Final Sourced Report",
+        "agent_name": "Sourced Decision Reporter Agent",
+        "state_hash": "90ff3c2e4cb7",
+        "verified_fact_summaries": [
+          "[zetaris_wms.inventory_ledger#WMS-701] usable=350, quarantined=800 (lot LOT-992A), deficit=2850, runway=35.9h",
+          "[zetaris_rest.carrier_port_feeds#CAR-901] status=CUSTOMS_HOLD_ORIGIN, delay=+96h",
+          "[zetaris_qms.incident_tickets#QMS-419] Sub-lot 992A-1 (350 units) passed X-ray at 0.0% void; Sub-lot 992A-2 (800 units) failed at 18.4% void rate | Verdict: Scanning acoustic micro",
+          "[zetaris_erp.qualified_suppliers#SIC-MOD-1200V] 2 backup vendor(s) available",
+          "All 3 conflicts (CONF-01, CONF-02, CONF-03) RESOLVED with multi-source corroboration",
+          "[switchyard.risk_calculator#RISK-PO-8841] Shortfall=3650 units, Unmitigated Loss=$5,446,400, Expedite Premium=$24,000.00, Net Saved=$5,422,400",
+          "Critic Sign-Off: APPROVED_WITH_PROVENANCE",
+          "Committed cross-session precedent HMEM-PREC-004 to Meterless H-MEM"
+        ],
+        "active_conflicts": [],
+        "open_directives": [],
+        "raw_turn_tokens": 682,
+        "naive_cumulative_tokens": 2359,
+        "bounded_capsule_tokens": 244,
+        "tokens_saved": 2115
+      }
+    }
+  ]
+}

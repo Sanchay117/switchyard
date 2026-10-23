@@ -1,0 +1,14 @@
+{
+  "case_id": "CASE-01",
+  "title": "PO-8841 SiC Power Module Split-Shipment & Solder-Void Quarantine",
+  "po_number": "PO-8841",
+  "sku": "SIC-MOD-1200V",
+  "production_line": "Line-B Inverter",
+  "operator_role": "Operations & Supply-Chain Lead",
+  "question": "ERP shows PO-8841 (4,000 units of SIC-MOD-1200V from Apex Wafer Corp) is SHIPPED_ON_TIME for Line-B Inverter, but the Dock-4 supervisor says we are hours from a line-stop. Reconcile ERP, Warehouse WMS, Quality QMS, and live Carrier telemetry through Zetaris, explain why the systems disagree, verify which sub-lots can be safely released, and compute the lowest-cost emergency supplier split to prevent a Line-B stop.",
+  "expected_conflicts": [
+    "ERP claims 4,000 units SHIPPED_ON_TIME (ETA 2026-10-25) vs WMS physical scan showing only 1,150 received and 2,850 in-transit deficit.",
+    "Carrier REST feed shows ocean vessel MV Pacific Horizon carrying the 2,850 remaining units is under a +96h export customs hold in Kaohsiung (revised ETA 2026-10-29).",
+    "Apex Wafer Corp claims all 1,150 air-shipped units passed outgoing AOI vs QMS-419 acoustic lab verdict proving Sub-lot 992A-2 (800 units) has 18.4% solder-void micro-cracking while Sub-lot 992A-1 (350 units) has 0.0% voids."
+  ]
+}

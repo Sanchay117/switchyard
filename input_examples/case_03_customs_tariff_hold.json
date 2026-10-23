@@ -1,0 +1,13 @@
+{
+  "case_id": "CASE-03",
+  "title": "PO-8910 Automotive Radar SoC Customs HTS Classification Hold",
+  "po_number": "PO-8910",
+  "sku": "MCU-ADAS-S32",
+  "production_line": "Line-C Controller",
+  "operator_role": "Materials Planning Lead",
+  "question": "Line-C Controller has only 24 hours of buffer left on MCU-ADAS-S32. ERP says PO-8910 (2,500 units from Kuroda Microelectronics) is IN_TRANSIT_CLEAR for Oct 24. Check Zetaris across all sources to see why zero units have arrived at the dock, verify whether there is any quality issue, and decide whether to wait for customs clearance or trigger domestic backup supplier Austin Silicon Works.",
+  "expected_conflicts": [
+    "ERP reports IN_TRANSIT_CLEAR for 2026-10-24 vs Carrier feed CAR-903 showing a 54-hour CBP customs hold at SFO Cargo Terminal due to HTS code mismatch (8542.31 vs 8526.91).",
+    "WMS shows 0 units received and only 480 units (24.0h runway) left on Line-C vs revised carrier ETA of 2026-10-26 (creating a 30-hour line-stop gap if unmitigated)."
+  ]
+}

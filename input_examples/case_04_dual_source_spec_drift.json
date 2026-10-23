@@ -1,0 +1,13 @@
+{
+  "case_id": "CASE-04",
+  "title": "PO-8935 Thermal Gel Formulation Revision Drift (Rev B.1 vs B.2)",
+  "po_number": "PO-8935",
+  "sku": "TIM-GEL-500G",
+  "production_line": "Line-A Pack Assembly",
+  "operator_role": "Manufacturing Process Lead",
+  "question": "ERP shows PO-8935 (1,800 cartridges of TIM-GEL-500G from NordicChem) is QUALITY_APPROVED under spec Rev B.1, but Line-A only has 20 hours of gel left because Chem-Vault-1 blocked 1,500 cartridges. Reconcile the spec mismatch across Zetaris sources and determine if we can safely use the quarantined Rev B.2 lot today.",
+  "expected_conflicts": [
+    "ERP master specifies Rev B.1 and marks PO-8935 QUALITY_APPROVED vs Carrier manifest and WMS scan showing 1,500 cartridges arrived as Rev B.2.",
+    "Supplier claims Rev B.2 is a drop-in replacement vs QMS-431 lab rheology test showing 12% higher viscosity and 14% higher nozzle pressure requiring PLC dispense profile #4 before release."
+  ]
+}

@@ -1,0 +1,6 @@
+po_number,sku,part_name,production_line,supplier_id,supplier_name,ordered_qty,unit_cost_usd,erp_status,promised_eta,incoterms,buyer_notes
+PO-8841,SIC-MOD-1200V,1200V SiC Power Module,Line-B Inverter,SUP-101,Apex Wafer Corp,4000,42.00,SHIPPED_ON_TIME,2026-10-25,CIF_OAKLAND,Vendor portal auto-confirmed full dispatch on 2026-10-19
+PO-8892,LFP-CELL-280AH,280Ah Prismatic LFP Cell,Line-A Pack Assembly,SUP-204,voltGrid Energy Ltd,6000,58.50,DELIVERED_COMPLETE,2026-10-22,DDP_FREMONT,ERP auto-closed after EDI 856 ASN receipt
+PO-8910,MCU-ADAS-S32,Automotive Radar SoC S32R,Line-C Controller,SUP-309,Kuroda Microelectronics,2500,31.20,IN_TRANSIT_CLEAR,2026-10-24,FOB_YOKOHAMA,Priority air-freight allocation confirmed by sales rep
+PO-8935,TIM-GEL-500G,High-Conductivity Thermal Gel,Line-A Pack Assembly,SUP-412,NordicChem Materials,1800,19.80,QUALITY_APPROVED,2026-10-23,FCA_ROTTERDAM,Standard spec rev B.1 recorded in ERP master
+PO-8960,HV-CONT-400A,400A Hermetic HV Contactor,Line-B Inverter,SUP-101,Apex Wafer Corp,3200,27.40,DELIVERED_COMPLETE,2026-10-21,CIF_OAKLAND,Marked complete in ERP via batch import

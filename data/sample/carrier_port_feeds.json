@@ -1,0 +1,67 @@
+[
+  {
+    "feed_id": "CAR-901",
+    "po_number": "PO-8841",
+    "vessel_or_flight": "MV Pacific Horizon / Split Air CX-884",
+    "origin_port": "Kaohsiung, TW",
+    "destination_port": "Oakland, US",
+    "carrier_status": "CUSTOMS_HOLD_ORIGIN",
+    "reported_delay_hours": 96,
+    "revised_eta": "2026-10-29T14:00:00Z",
+    "units_on_conveyance": 2850,
+    "telemetry_alert": "Ocean bill of lading HBL-8841B held for export dual-use power semiconductor inspection; +96h delay confirmed",
+    "updated_at_utc": "2026-10-23T06:55:00Z"
+  },
+  {
+    "feed_id": "CAR-902",
+    "po_number": "PO-8892",
+    "vessel_or_flight": "Maersk Salalah / Reefer Cont MSKU-492011",
+    "origin_port": "Ningbo, CN",
+    "destination_port": "Fremont, US",
+    "carrier_status": "DELIVERED_WITH_TELEMETRY_ALARM",
+    "reported_delay_hours": 0,
+    "revised_eta": "2026-10-22T18:30:00Z",
+    "units_on_conveyance": 6000,
+    "telemetry_alert": "IoT datalogger DL-992 recorded compressor relay trip on Cont #2 (43.8C peak for 9.2h during drayage)",
+    "updated_at_utc": "2026-10-23T05:00:00Z"
+  },
+  {
+    "feed_id": "CAR-903",
+    "po_number": "PO-8910",
+    "vessel_or_flight": "ANA Cargo NH-8512",
+    "origin_port": "Narita, JP",
+    "destination_port": "SFO, US",
+    "carrier_status": "BROKER_TARIFF_HOLD",
+    "reported_delay_hours": 54,
+    "revised_eta": "2026-10-26T11:00:00Z",
+    "units_on_conveyance": 2500,
+    "telemetry_alert": "CBP entry hold at SFO Cargo Terminal: commercial invoice lists HTS 8542.31 instead of radar sub-assembly 8526.91",
+    "updated_at_utc": "2026-10-23T07:10:00Z"
+  },
+  {
+    "feed_id": "CAR-904",
+    "po_number": "PO-8935",
+    "vessel_or_flight": "KLM Cargo KL-0605",
+    "origin_port": "Amsterdam, NL",
+    "destination_port": "SFO, US",
+    "carrier_status": "DELIVERED_COMPLETE",
+    "reported_delay_hours": 0,
+    "revised_eta": "2026-10-23T02:15:00Z",
+    "units_on_conveyance": 1800,
+    "telemetry_alert": "Cold-pack ambient range maintained 15C-21C; packing manifest declares Lot Revision B.2",
+    "updated_at_utc": "2026-10-23T04:30:00Z"
+  },
+  {
+    "feed_id": "CAR-905",
+    "po_number": "PO-8960",
+    "vessel_or_flight": "EVA Air Cargo BR-0618",
+    "origin_port": "Taipei, TW",
+    "destination_port": "SFO, US",
+    "carrier_status": "PARTIAL_MANIFEST_DISPATCHED",
+    "reported_delay_hours": 72,
+    "revised_eta": "2026-10-26T19:00:00Z",
+    "units_on_conveyance": 2100,
+    "telemetry_alert": "Air waybill AWB-29910 shows 7 pallets (2100 units) loaded; remaining 4 pallets (1100 units) rolled to flight BR-0624 on Oct 26",
+    "updated_at_utc": "2026-10-23T06:30:00Z"
+  }
+]

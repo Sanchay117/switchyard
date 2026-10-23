@@ -1,0 +1,14 @@
+{
+  "case_id": "CASE-02",
+  "title": "PO-8892 Prismatic LFP Cell Reefer Thermal Excursion & DCIR Rise",
+  "po_number": "PO-8892",
+  "sku": "LFP-CELL-280AH",
+  "production_line": "Line-A Pack Assembly",
+  "operator_role": "Battery Pack Operations Lead",
+  "question": "PO-8892 (6,000 LFP-CELL-280AH cells from voltGrid Energy) is marked DELIVERED_COMPLETE in ERP, yet Cold-Bay-2 has 1,800 cells locked. Query Zetaris across ERP, WMS, QMS, and Carrier reefer telemetry to determine why Pallets 5-6 are blocked, evaluate voltGrid's thermal tolerance claim against lab impedance data and H-MEM rules, and issue a replenishment plan before Line-A runs dry.",
+  "expected_conflicts": [
+    "ERP shows all 6,000 cells DELIVERED_COMPLETE and available vs WMS showing 1,800 cells quarantined in Cold-Bay-2.",
+    "Carrier IoT logger DL-992 recorded a 43.8C compressor relay trip for 9.2h on Container #2.",
+    "Supplier voltGrid claims 45C for 24h causes zero degradation vs QMS-422 lab test showing 6.8% DCIR rise on Pallets 5-6, violating H-MEM precedent BES-402 (>40C and >5% DCIR)."
+  ]
+}
