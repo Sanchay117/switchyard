@@ -152,8 +152,11 @@ Switchyard is explicitly designed against linear `Agent A -> Agent B -> Agent C`
 - **Lightning SQL Onboarding:** `scripts/register_zetaris_sources.sql` registers the `switchyard` SchemaStore container, `SWITCHYARD_REST` Lightning database, `carrier_port_feeds` REST table, starter `pokeapi` table, and Unified Semantic Layer views.
 - **Offline Judging (`SAMPLE_MODE=true`):** When `SAMPLE_MODE=true` (or if Docker is not running on the judge's laptop), `ZetarisClient` attaches in-memory SQLite schemas (`zetaris_erp`, `zetaris_wms`, `zetaris_qms`, `zetaris_rest`, `pokeapi`) populated from `data/sample/` so every agent SQL query executes real SQL joins and filters without manual setup.
 
-### 02 BUILD: Meterless Engines Implemented & How Each Is Tested (`agent/engines/` & `tests/test_meterless_engines.py`)
-We implemented **all four Meterless Engines** (`meterless.ai/engines.html`) in working product features:
+### 02 BUILD: How Cursor & Meterless Engines Were Used (`AGENTS.md`, `.cursor/rules/switchyard.mdc`, `agent/engines/` & `metadata.json`)
+- **How Our Team Used Cursor:**
+  - **Cursor Agent Mode + `AGENTS.md` & `.cursor/rules/switchyard.mdc`:** We configured Cursor's Agent with `AGENTS.md` and `.cursor/rules/switchyard.mdc` so the coding agent automatically ran `python3 scripts/preflight.py`, enforced Zetaris's single-statement REST SQL contract (`POST /sql-editor/sqls/run` with fresh UUID4 `X-Request-ID`), and kept runtime tokens out of IDE model settings.
+  - **Cursor Composer & Grok Workflow:** We used **Composer** in Cursor for fast multi-file scaffolding, the interactive Web Command Center (`web/index.html`), and automated test generation, and switched to **Grok** in Cursor for deep state-machine design across the 6-step adversarial `Conflict Critic` loop and optimistic concurrency control.
+  - **Meterless Prompt Library (`meterless.ai/engines.html`):** We pasted the `IDEATE`, `IMPLEMENT`, `COMBINE`, and `HARDEN` prompts into Cursor Agent chat to implement and verify **all four Meterless Engines** in working product features (documented in both this `README.md` and [`metadata.json`](metadata.json)):
 
 | Meterless Engine | Code Module | Working Feature in Switchyard | Automated Test |
 | :--- | :--- | :--- | :--- |
@@ -188,9 +191,13 @@ We implemented **all four Meterless Engines** (`meterless.ai/engines.html`) in w
 
 ```
 Open_Agent_Hackathon/
+├── .cursor/
+│   └── rules/
+│       └── switchyard.mdc           # Cursor Agent rules for Zetaris, Meterless & Nightshift
 ├── .env.example                     # Placeholder configuration (no secrets)
 ├── .gitignore                       # Ignores .env, logs, and local archives
 ├── AGENTS.md                        # Master technical contract & instructions for AI agents
+├── metadata.json                    # Sponsor Tech metadata (Cursor, Zetaris, Meterless, Nemotron)
 ├── README.md                        # Setup, architecture, and sponsor documentation
 ├── SUBMISSION.md                    # Ready-to-paste HackOS submission form answers
 ├── requirements.txt                 # Python package list (also runs on bare Python 3 stdlib)

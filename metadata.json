@@ -1,0 +1,100 @@
+{
+  "project_name": "Switchyard",
+  "team_name": "Push And Pray",
+  "event": "Open Agent Hackathon 2026",
+  "track": "Track 1: Solving Fragmented Intelligence",
+  "bonus_awards_targeted": [
+    "NVIDIA Nemotron Award (DGX Spark Founder's Edition)",
+    "Best Cursor-Built Product"
+  ],
+  "repository_url": "https://github.com/Sanchay117/switchyard",
+  "sponsor_tech": {
+    "data_layer_zetaris": {
+      "used": true,
+      "integration_type": "Zetaris REST SQL API (POST /api/v1.0/sql-editor/sqls/run) + Lightning SQL SchemaStore & REST Tables",
+      "code_paths": [
+        "agent/tools_zetaris.py",
+        "scripts/register_zetaris_sources.sql",
+        "scripts/preflight.py"
+      ],
+      "sources_queried": [
+        "zetaris_erp.purchase_orders",
+        "zetaris_erp.qualified_suppliers",
+        "zetaris_wms.inventory_ledger",
+        "zetaris_qms.incident_tickets",
+        "zetaris_rest.carrier_port_feeds",
+        "pokeapi.pikachu_abilities_table"
+      ]
+    },
+    "build_layer_cursor": {
+      "used": true,
+      "models_and_modes": [
+        "Cursor Agent Mode with AGENTS.md and .cursor/rules/switchyard.mdc",
+        "Cursor Composer for fast multi-file wiring, Web Command Center UI, and test suite generation",
+        "Grok in Cursor for multi-agent state-machine reasoning, adversarial Conflict Critic loop design, and Meterless Engine hardening"
+      ],
+      "how_cursor_was_used": "We used Cursor Agent Mode guided by AGENTS.md and .cursor/rules/switchyard.mdc together with the Meterless Engines prompt library (meterless.ai/engines.html) to scaffold, wire, and harden all four Meterless Engines, enforce Zetaris single-statement REST SQL guardrails (scripts/preflight.py), and verify the 8-test conformance suite.",
+      "config_files": [
+        "AGENTS.md",
+        ".cursor/rules/switchyard.mdc"
+      ]
+    },
+    "build_layer_meterless_engines": {
+      "used": true,
+      "engines_implemented": [
+        {
+          "name": "Scout Intent",
+          "code_path": "agent/engines/scout_intent.py",
+          "test": "tests/test_meterless_engines.py::test_01_scout_intent_routing_and_risk"
+        },
+        {
+          "name": "World Model",
+          "code_path": "agent/engines/world_model.py",
+          "test": "tests/test_meterless_engines.py::test_02_world_model_shared_state_and_concurrency"
+        },
+        {
+          "name": "Markovian Thinking",
+          "code_path": "agent/engines/markovian.py",
+          "test": "tests/test_meterless_engines.py::test_03_markovian_bounded_context_compression"
+        },
+        {
+          "name": "H-MEM (Hierarchical Memory)",
+          "code_path": "agent/engines/h_mem.py",
+          "test": "tests/test_meterless_engines.py::test_04_hmem_cross_session_persistence_and_recall"
+        }
+      ]
+    },
+    "power_layer_meterless_nightshift_and_nvidia_nemotron": {
+      "used": true,
+      "primary_provider": "Meterless Nightshift Runtime (http://127.0.0.1:8088/v1)",
+      "runtime_headers": [
+        "Authorization: Bearer <METERLESS_RUNTIME_TOKEN>",
+        "meterless-app: switchyard-agent",
+        "meterless-scope: user"
+      ],
+      "models_used": [
+        {
+          "lane": "Lane 1 (Fast Worker)",
+          "model_id": "nvidia/nemotron-3.5-lightning-30b-a3b",
+          "steps_handled": [
+            "Step 1: Planner & Source Mapper Agent",
+            "Step 2: Zetaris Reconciler Agent (Round 1 SQL Discovery)",
+            "Step 4: Zetaris Reconciler Agent (Round 2 Targeted SQL Re-Query)"
+          ]
+        },
+        {
+          "lane": "Lane 2 (Deep Worker)",
+          "model_id": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+          "steps_handled": [
+            "Step 3: Conflict & Evidence Critic Agent",
+            "Step 5: Risk & Policy Escalation Agent",
+            "Step 6: Sourced Decision Reporter Agent"
+          ]
+        }
+      ],
+      "code_path": "agent/llm.py",
+      "smoke_test": "smoke_test.py"
+    }
+  },
+  "pre_existing_components": "None. Built 100% during the Open Agent Hackathon 2026 build window (22-27 October 2026)."
+}

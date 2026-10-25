@@ -1,0 +1,28 @@
+---
+description: Switchyard Cursor Agent Rules for Zetaris SQL, Meterless Engines, and Nightshift NVIDIA Nemotron
+globs: ["agent/**/*.py", "scripts/**/*.py", "scripts/**/*.sql", "tests/**/*.py", "smoke_test.py"]
+alwaysApply: true
+---
+
+# Switchyard Cursor Agent Rules (Open Agent Hackathon 2026)
+
+Always read and follow `AGENTS.md` before modifying any Data, Build, or Power layer code.
+
+## 1. Layer 01 (DATA - Zetaris)
+- Run `python3 scripts/preflight.py` before onboarding or modifying Zetaris tables.
+- Send **one complete SQL statement at a time** to `POST {ZETARIS_REST_URL}/sql-editor/sqls/run`. Never batch semicolon-separated statements.
+- Include `Authorization: Bearer <ZETARIS_API_KEY>`, `X-Org-ID: 1`, and a fresh `uuid.uuid4()` `X-Request-ID` on every REST request.
+- Never print or log credentials from `.env` or `.env.local`.
+
+## 2. Layer 02 (BUILD - Cursor & Meterless Engines)
+- Maintain working implementations and conformance tests for all four Meterless Engines (`meterless.ai/engines.html`):
+  - `agent/engines/scout_intent.py` (Scout Intent)
+  - `agent/engines/world_model.py` (World Model with optimistic concurrency control)
+  - `agent/engines/markovian.py` (Markovian bounded `CarryOverState` compression)
+  - `agent/engines/h_mem.py` (H-MEM 3-tier persistent memory)
+- Verify changes with `python3 -m unittest discover -s tests -v`.
+
+## 3. Layer 03 (POWER - Meterless Nightshift & NVIDIA Nemotron)
+- Route all runtime LLM calls through Meterless Nightshift (`http://127.0.0.1:8088/v1`) with `meterless-app: switchyard-agent` and `meterless-scope: user`.
+- Keep the NVIDIA API key inside Nightshift (`Setup -> Providers -> NVIDIA`), never inside Cursor's own model provider settings or committed code.
+- Record a `ModelReceipt` (`model_handled_by`, `lane`, `latency_ms`, token counts) for every agent step.
